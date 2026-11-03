@@ -11,12 +11,18 @@ import reviewsRoutes from "./routes/reviews.js";
 import servicesRoutes from "./routes/services.js";
 import usersRoutes from "./routes/users.js";
 import adminRoutes from "./routes/admin.js";
+import supportRoutes from "./routes/support.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MOCK_MODE = process.env.MOCK_MODE === "true";
+
+// Warn if JWT_SECRET is still the default placeholder (production risk)
+if (process.env.NODE_ENV === "production" && (!process.env.JWT_SECRET || process.env.JWT_SECRET === "your-secret-key-here")) {
+  console.warn("⚠️  WARNING: JWT_SECRET is not set or is the default placeholder. Set a strong secret in production.");
+}
 
 app.use(cors());
 app.use(express.json());
@@ -32,6 +38,7 @@ app.use("/api/reviews", reviewsRoutes);
 app.use("/api/services", servicesRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/support", supportRoutes);
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", mode: MOCK_MODE ? "demo" : "live" });

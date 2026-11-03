@@ -45,12 +45,11 @@ export default function Support() {
     }
     setSubmitting(true);
     try {
-      // Simulate API call — in production this would hit /api/support
-      await new Promise((r) => setTimeout(r, 800));
-      toast.success("Message sent — we'll get back to you soon!");
+      const res = await api.post("/support", { subject: form.subject, message: form.message });
+      toast.success(res.data.message || "Message sent — we'll get back to you soon!");
       setForm({ name: user?.name || "", email: user?.email || "", subject: "", message: "" });
-    } catch {
-      toast.error("Failed to send — try again");
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Failed to send — try again");
     } finally {
       setSubmitting(false);
     }

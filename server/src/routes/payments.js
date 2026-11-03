@@ -112,7 +112,7 @@ router.post("/process", async (req, res) => {
       status: "success",
       method,
       paidAt: new Date(),
-      invoiceUrl: `/api/payments/${undefined}/invoice`.replace(undefined, ""),
+      invoiceUrl: `/api/payments/${Date.now()}/invoice`, // placeholder — overwritten with real payment._id below
       breakdown: {
         subtotal: breakdown?.subtotal || 0,
         discount: breakdown?.discount || 0,

@@ -138,7 +138,7 @@ export default function AdminPanel() {
     setUsersLoading(true);
     try {
       const res = await api.get("/api/admin/users");
-      setUsers(res.data.users || []);
+      setUsers(res.data || []);
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to load users");
     } finally {

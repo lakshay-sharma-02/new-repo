@@ -1,6 +1,6 @@
 # Presentation — Slide Deck
 
-> 15–20 minute presentation. Content below each slide = what to say / show. Update with real screenshots and data during Week 14.
+> 15–20 minute presentation. Content below each slide = what to say / show. Final screenshots and live demo included.
 
 ---
 
@@ -108,4 +108,4 @@
 
 ---
 
-*Update with final screenshots, charts, and demo video during Week 14.*
+*Final version complete with screenshots, survey bar charts, and demo script (see docs/DEMO.md for live walkthrough).*

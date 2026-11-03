@@ -77,27 +77,36 @@ laundry-roulette/
 ├── client/              # React + Vite frontend
 │   ├── public/          # Static assets
 │   ├── src/
-│   │   ├── components/  # Reusable UI (Navbar, StatusTracker, DemoSimulator, etc.)
+│   │   ├── components/  # Navbar, StatusTracker, DemoSimulator, NotificationsBell, Toast
 │   │   ├── context/     # Auth context + provider
-│   │   ├── lib/         # API client
-│   │   ├── pages/       # 13 route pages
-│   │   └── App.jsx      # Main app with role-based routing
+│   │   ├── lib/         # API client (api.js — Axios with JWT interceptor)
+│   │   ├── pages/       # 15 route pages
+│   │   ├── App.jsx      # Main app with role-based routing
+│   │   ├── App.css      # Vite defaults (unused)
+│   │   ├── index.css    # Tailwind base + design system
+│   │   └── App.test.jsx # Smoke test
 │   ├── package.json
-│   └── vite.config.js
+│   ├── vite.config.js
+│   └── vitest.config.js # Test runner config
 │
 ├── server/              # Express backend
 │   ├── src/
 │   │   ├── models/      # 8 Mongoose schemas
 │   │   ├── mock/        # In-memory store + seed data (demo mode)
-│   │   ├── routes/      # 10 route modules
+│   │   ├── routes/      # 11 route modules (incl. support.js)
 │   │   ├── middleware/  # JWT auth + role checks
-│   │   └── index.js     # Server entry point
+│   │   └── index.js     # Server entry point + route mounting
 │   ├── .env.example
 │   └── package.json
 │
 └── docs/                # Research & deliverables
-    ├── design/          # Empathy map, journey map, failure points, idea log
-    └── deliverables/    # Final report outline, presentation outline
+    ├── README.md        # Project spec
+    ├── timeline.md      # Semester milestones
+    ├── INSTALL.md       # Installation guide
+    ├── DEMO.md          # Live demo walkthrough
+    ├── research/        # Research artifacts
+    ├── design/          # Personas, journey maps, failure points
+    └── deliverables/    # Final report + presentation outline
 ```
 
 ## Getting Started

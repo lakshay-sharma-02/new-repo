@@ -293,7 +293,7 @@ Explicitly **not** built: QR scanning (hardware infrastructure), smart lockers (
 │     │                                                       │
 │     ├── AuthContext (JWT)                                   │
 │     ├── ToastProvider                                       │
-│     ├── 13 Pages                                            │
+│     ├── 15 Pages                                            │
 │       ├── Landing, Login, Register                          │
 │       ├── Dashboard, TimingsSetup, SubmitLaundry            │
 │       ├── TrackStatus, ReportIssue                          │
@@ -301,7 +301,7 @@ Explicitly **not** built: QR scanning (hardware infrastructure), smart lockers (
 │       ├── StaffConsole, AdminPanel, Support                 │
 │     ├── Components                                          │
 │       ├── Navbar, StatusTracker, DemoSimulator              │
-│       ├── NotificationsBell, Toast, QRScanner               │
+│       ├── NotificationsBell, Toast,                           │
 │     └── API client (Axios) ── /api/* ── Server              │
 │                                                             │
 │  Vite proxy: /api → http://localhost:5000                  │
@@ -312,14 +312,14 @@ Explicitly **not** built: QR scanning (hardware infrastructure), smart lockers (
 │                                                             │
 │  Middleware: CORS, express.json, authenticate (JWT)        │
 │                                                             │
-│  Routes (10 modules):                                      │
-│  ┌──────────┬──────────┬────────────┬──────────┬──────────┐ │
-│  │ auth.js  │ timings  │ batches    │ demo.js  │ payments │ │
-│  │          │ routes   │ routes     │          │ routes   │ │
-│  ├──────────┼──────────┼────────────┼──────────┼──────────┤ │
-│  │ notif.   │ reviews  │ services   │ users    │ admin    │ │
-│  │ routes   │ routes   │ routes     │ routes   │ routes   │ │
-│  └──────────┴──────────┴────────────┴──────────┴──────────┘ │
+│  Routes (11 modules):                                      │
+│  ┌──────────┬──────────┬────────────┬──────────┬──────────┬──────────┐ │
+│  │ auth.js  │ timings  │ batches    │ demo.js  │ payments │ support  │ │
+│  │          │ routes   │ routes     │          │ routes   │ routes   │ │
+│  ├──────────┼──────────┼────────────┼──────────┼──────────┼──────────┤ │
+│  │ notif.   │ reviews  │ services   │ users    │ admin    │          │ │
+│  │ routes   │ routes   │ routes     │ routes   │ routes   │          │ │
+│  └──────────┴──────────┴────────────┴──────────┴──────────┴──────────┘ │
 │                                                             │
 │  Data Layer (switchable):                                  │
 │  MOCK_MODE=true → In-memory store (no DB)                   │
@@ -369,7 +369,8 @@ All routes are under `/api/` and require JWT authentication (except `/api/health
 | `/api/reviews` | GET | Student | Service reviews |
 | `/api/reviews` | POST | Student | Submit a review |
 | `/api/admin/users` | GET | Warden | List all users |
-| `/api/admin/stats` | GET | Warden | Overview statistics |
+| `/api/admin/analytics` | GET | Warden | Overview statistics |
+| `/api/support` | POST | Any user | Submit a support/contact request |
 | `/api/demo/advance` | POST | Student (demo only) | Auto-advance demo batches |
 
 ### 5.4 Demo Accounts
@@ -522,7 +523,7 @@ The project is not a finished product — it's a validated prototype that proves
 
 ### Appendix A: Interview Transcript Excerpts
 
-*(Full transcripts in `research-data/` — excerpts shown here)*
+*(Full excerpts shown here — raw interview data captured in `docs/research/observations-log.md`)*
 
 **H01 (B6, 2nd year):**
 > "It's a black hole. You put clothes in, you get clothes out — maybe. Sometimes my roommate's blue shirt comes back with a red stain. We never know what happened in between."

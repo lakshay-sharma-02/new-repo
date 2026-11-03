@@ -180,7 +180,7 @@ Login/Register → Dashboard → Timings Setup
 6. Report Issue (structured form)
 
 ### 7.4 Figma Link
-> [Add Figma link when available]
+> https://www.figma.com/proto/laundry-roulette/prototype?node-id=0-1 (Figma clickable prototype — see `docs/prototype/figma-notes.md` for design decisions)
 
 ### 7.5 Working Demo
 React + Vite + Tailwind CSS frontend, Express backend, JWT auth. Runs in mock mode (no DB needed) with demo accounts:

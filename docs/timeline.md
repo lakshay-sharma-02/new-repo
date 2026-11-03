@@ -83,12 +83,12 @@ No project work.
 | UI/UX overhaul complete | 11 | ✅ |
 | Usability testing done | 12 | ✅ |
 | Final iteration complete | 13 | ✅ |
-| All deliverables submitted | 14 | 🔲 (write final report + presentation) |
+| All deliverables submitted | 14 | ✅ |
 
 ---
 
-*Status updated: research (Weeks 3–5), synthesis (6–7), working demo + UI overhaul (9–13), usability testing (12), iterations (13). Final report + presentation remain for Week 14.*
+*Status updated: research (Weeks 3–5), synthesis (6–7), working demo + UI overhaul (9–13), usability testing (12), iterations (13). Final report + presentation complete (Week 14).*
 
 ---
 
-*Last updated: Week 13*
+*Last updated: Week 14*

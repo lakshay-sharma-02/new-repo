@@ -1,4 +1,4 @@
-# Installation & Setup Guide
+﻿# Installation & Setup Guide
 
 ## Quick Start (Demo Mode — No Database Required)
 
@@ -85,21 +85,22 @@ laundry-roulette/
 ├── client/                     # React frontend
 │   ├── package.json
 │   ├── vite.config.js
+│   ├── vitest.config.js        # Test runner config
 │   ├── .gitignore
 │   ├── index.html
 │   └── src/
 │       ├── main.jsx            # Entry point
 │       ├── App.jsx             # Routing + role-based protection
-│       ├── App.css             # Design system (glass morphism, gradients)
-│       ├── index.css           # Tailwind base
-│       ├── api.js              # Axios client with JWT interceptor
+│       ├── App.css             # Vite default styles (unused — see index.css)
+│       ├── index.css           # Tailwind base + design system (glass morphism, gradients)
+│       ├── lib/
+│       │   └── api.js          # Axios client with JWT interceptor (baseURL: /api)
 │       ├── components/
 │       │   ├── Navbar.jsx        # Top navigation
 │       │   ├── StatusTracker.jsx # Stage progress bar
 │       │   ├── DemoSimulator.jsx # Live demo widget
 │       │   ├── NotificationsBell.jsx # In-app notifications
-│       │   ├── Toast.jsx         # Toast provider
-│       │   └── QRScanner.jsx     # (Future feature scaffold)
+│       │   └── Toast.jsx         # Toast provider
 │       ├── context/
 │       │   └── AuthContext.jsx   # JWT auth state
 │       └── pages/              # 15 route pages
@@ -124,7 +125,7 @@ laundry-roulette/
 │   ├── .env.example
 │   ├── .env                    # Local env (not committed)
 │   └── src/
-│       ├── index.js            # Entry point, mode detection
+│       ├── index.js            # Entry point, mode detection, route mounting
 │       ├── middleware/
 │       │   └── auth.js         # JWT + role authorization
 │       ├── models/             # 8 Mongoose schemas
@@ -136,12 +137,12 @@ laundry-roulette/
 │       │   ├── Coupon.js
 │       │   ├── Review.js
 │       │   ├── Service.js
-│       │   └── index.js        # Exports all models
+│       │   └── index.js        # Exports all models (mock/real adapter)
 │       ├── mock/               # Demo mode infrastructure
 │       │   ├── store.js        # In-memory Collection class (Mongoose-compatible)
 │       │   ├── models.js       # Mock model wrappers
 │       │   └── seed.js         # Seeds demo world (5 users, 2 schedules, 5 batches, etc.)
-│       └── routes/             # 10 route modules
+│       └── routes/             # 11 route modules
 │           ├── auth.js          # Login, register, /me
 │           ├── batches.js       # CRUD + status updates + issues
 │           ├── timings.js       # Schedule publish/list/delete
@@ -150,16 +151,20 @@ laundry-roulette/
 │           ├── reviews.js       # Service reviews
 │           ├── services.js      # Service tiers
 │           ├── users.js         # User management
-│           ├── admin.js         # Warden-only endpoints
-│           └── demo.js          # Demo simulator engine (MOCK_MODE only)
+│           ├── admin.js         # Warden-only endpoints (analytics, users, services)
+│           ├── demo.js          # Demo simulator engine (MOCK_MODE only)
+│           └── support.js       # Contact form submissions → warden notifications
 │
 └── docs/                       # Research & deliverables
     ├── README.md               # Project spec
     ├── timeline.md             # Semester milestones
     ├── INSTALL.md              # This file
     ├── research/               # Raw research artifacts
+    │   ├── interview-guide.md
+    │   ├── survey-template.md
+    │   ├── observations-log.md
+    │   └── literature-review.md
     ├── design/                 # Personas, journey maps, failure points
-    ├── prototype/              # Testing plans, iterations, Figma notes
     └── deliverables/           # Final report + presentation
 ```
 
@@ -175,12 +180,14 @@ laundry-roulette/
 | Port 5173 already in use | Run frontend with a different port: `npx vite --port 3000` |
 | Styles look broken | Make sure `npm install` completed in both `client/` and `server/` |
 | MongoDB connection error | Ensure `MOCK_MODE=true` in `server/.env` (this is the default) |
+| Test command fails | Make sure `npm install` completed in `client/` (includes vitest) |
 
 ---
 
 ## Production Notes
 
-- JWT secret is in `.env` — change it for real deployment
+- JWT secret is in `.env` — change it for real deployment; the server warns if the default placeholder is used in production mode
 - The 5% tax rate is hardcoded in `server/src/routes/payments.js`
 - Demo accounts are seeded only in `MOCK_MODE=true` — in production, users register as students only
 - Staff/warden accounts must be created manually via MongoDB or an admin seed script
+- Run tests: `cd client && npm test`

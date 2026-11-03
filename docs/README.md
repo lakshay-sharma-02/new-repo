@@ -76,10 +76,11 @@ laundry-day-roulette/
 │   │   ├── feedback-capture.md    ← feedback capture matrix
 │   │   └── iteration-log.md       ← iteration record
 │   └── deliverables/
+│       ├── final-report.md          ← final report (10 sections, full research + validation)
 │       ├── final-report-outline.md
 │       └── presentation-outline.md
 ├── prototype/                     ← Figma files / working demo code
-└── research-data/                 ← raw interview transcripts, survey data
+└── research-data/                 ← raw interview transcripts, survey data (in docs/research/)
 ```
 
 ## Key Deliverables Checklist
@@ -92,8 +93,8 @@ laundry-day-roulette/
 - [x] Prototype (working demo — React + Express)
 - [x] Test plan + feedback capture matrix
 - [x] Iteration record
-- [ ] Final report
-- [ ] Presentation
+- [x] Final report
+- [x] Presentation
 - [x] Working demo
 
 ---
