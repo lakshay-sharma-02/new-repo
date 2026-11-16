@@ -67,6 +67,12 @@ export default function Login() {
                 className="field" placeholder="••••••••" autoComplete="current-password" />
             </div>
 
+            <div className="flex justify-end -mt-2">
+              <Link to="/forgot-password" className="text-xs text-accent-300 hover:text-white font-medium transition-colors">
+                Forgot password?
+              </Link>
+            </div>
+
             <button type="submit" disabled={loading} className="btn-primary w-full py-3">
               {loading ? (
                 <span className="flex items-center justify-center gap-2">

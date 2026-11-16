@@ -33,6 +33,7 @@ export async function seedDemoData() {
     password: "demo123",
     hostelBlock: "B6",
     role: "student",
+    emailVerified: true,
   });
   const priya = await MockUser.create({
     name: "Priya Sharma",
@@ -40,6 +41,7 @@ export async function seedDemoData() {
     password: "demo123",
     hostelBlock: "C3",
     role: "student",
+    emailVerified: true,
   });
   const ramesh = await MockUser.create({
     name: "Ramesh Kumar",
@@ -47,6 +49,7 @@ export async function seedDemoData() {
     password: "demo123",
     hostelBlock: "B6",
     role: "staff",
+    emailVerified: true,
   });
   const suresh = await MockUser.create({
     name: "Suresh Rao",
@@ -54,6 +57,7 @@ export async function seedDemoData() {
     password: "demo123",
     hostelBlock: "C3",
     role: "staff",
+    emailVerified: true,
   });
   const meera = await MockUser.create({
     name: "Meera Iyer",
@@ -61,6 +65,7 @@ export async function seedDemoData() {
     password: "demo123",
     hostelBlock: "ALL",
     role: "warden",
+    emailVerified: true,
   });
 
   // ----- Published block schedules (owned by block staff) -----

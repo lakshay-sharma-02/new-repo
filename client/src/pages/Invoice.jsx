@@ -19,7 +19,7 @@ export default function Invoice() {
   const fetchInvoice = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get(`/api/payments/${id}/invoice`);
+      const res = await api.get(`/payments/${id}/invoice`);
       setInvoice(res.data);
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to load invoice");
@@ -33,9 +33,15 @@ export default function Invoice() {
   }, [fetchInvoice]);
 
   const handleDownload = () => {
+    // Escape every user-controlled value before writing raw HTML.
+    const esc = (value) =>
+      String(value ?? "").replace(/[&<>"']/g, (ch) =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch])
+      );
+
     // Build printable content and open a new window
     const html = `
-      <html><head><title>Invoice ${invoice.invoiceNumber}</title>
+      <html><head><title>Invoice ${esc(invoice.invoiceNumber)}</title>
       <style>
         body { font-family: 'Segoe UI', sans-serif; color: #111; background: #fff; padding: 40px; }
         .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
@@ -56,23 +62,23 @@ export default function Invoice() {
       </head><body>
         <div class="header"><div><span class="logo">🧺 Laundry<span class="grad">Roulette</span></span><p style="color:#6b7280;margin-top:4px;font-size:13px;">Invoice</p></div>
         <div style="text-align:right;"><div class="badge ${invoice.paymentStatus === 'success' ? 'paid' : invoice.paymentStatus === 'failed' ? 'failed' : 'pending'}">${invoice.paymentStatus}</div>
-        <p style="font-size:12px;color:#6b7280;margin-top:6px;">${invoice.invoiceNumber}</p></div>
+        <p style="font-size:12px;color:#6b7280;margin-top:6px;">${esc(invoice.invoiceNumber)}</p></div>
         </div>
         <div class="card">
           <h3 style="font-size:13px;color:#9ca3af;text-transform:uppercase;margin:0 0 16px;">Bill to</h3>
-          <p style="margin:4px 0;font-size:14px;"><b>${invoice.studentName}</b></p>
-          <p style="margin:4px 0;font-size:13px;color:#4b5563;">${invoice.studentEmail}</p>
-          <p style="margin:4px 0;font-size:13px;color:#4b5563;">Block: ${invoice.block}</p>
+          <p style="margin:4px 0;font-size:14px;"><b>${esc(invoice.studentName)}</b></p>
+          <p style="margin:4px 0;font-size:13px;color:#4b5563;">${esc(invoice.studentEmail)}</p>
+          <p style="margin:4px 0;font-size:13px;color:#4b5563;">Block: ${esc(invoice.block)}</p>
         </div>
         <div class="card">
           <table>
             <thead><tr><th>Qty</th><th>Type</th><th class="text-right">Rate</th><th class="text-right">Amount</th></tr></thead>
             <tbody>
-              ${invoice.items.map((it) => `<tr><td>${it.count}</td><td>${it.type.charAt(0).toUpperCase()+it.type.slice(1)}</td><td class="text-right">₹${it.price}</td><td class="text-right">₹${(it.price * it.count).toFixed(2)}</td></tr>`).join("")}
+              ${invoice.items.map((it) => `<tr><td>${it.count}</td><td>${esc(it.type.charAt(0).toUpperCase()+it.type.slice(1))}</td><td class="text-right">₹${it.price}</td><td class="text-right">₹${(it.price * it.count).toFixed(2)}</td></tr>`).join("")}
             </tbody>
             <tfoot>
               <tr><td colspan="3">Subtotal</td><td class="text-right">₹${invoice.pricing.subtotal.toFixed(2)}</td></tr>
-              ${invoice.pricing.couponCode ? `<tr><td colspan="3">Discount (${invoice.pricing.couponCode})</td><td class="text-right">-₹${invoice.pricing.discount.toFixed(2)}</td></tr>` : ""}
+              ${invoice.pricing.couponCode ? `<tr><td colspan="3">Discount (${esc(invoice.pricing.couponCode)})</td><td class="text-right">-₹${invoice.pricing.discount.toFixed(2)}</td></tr>` : ""}
               <tr><td colspan="3">Tax (5%)</td><td class="text-right">₹${invoice.pricing.tax.toFixed(2)}</td></tr>
               <tr class="total-row"><td colspan="3">Total</td><td class="text-right">₹${invoice.pricing.total.toFixed(2)}</td></tr>
             </tfoot>
@@ -80,14 +86,14 @@ export default function Invoice() {
         </div>
         <div class="card">
           <h3 style="font-size:13px;color:#9ca3af;text-transform:uppercase;margin:0 0 12px;">Batch details</h3>
-          <p style="margin:4px 0;font-size:14px;"><b>#${invoice.invoiceNumber}</b></p>
-          <p style="margin:4px 0;font-size:13px;color:#4b5563;">${invoice.batchDetails.description}</p>
-          <p style="margin:4px 0;font-size:13px;color:#4b5563;">Size: ${invoice.batchDetails.itemEstimate}</p>
-          <p style="margin:4px 0;font-size:13px;color:#4b5563;">Batch status: ${invoice.batchDetails.status}</p>
+          <p style="margin:4px 0;font-size:14px;"><b>#${esc(invoice.invoiceNumber)}</b></p>
+          <p style="margin:4px 0;font-size:13px;color:#4b5563;">${esc(invoice.batchDetails.description)}</p>
+          <p style="margin:4px 0;font-size:13px;color:#4b5563;">Size: ${esc(invoice.batchDetails.itemEstimate)}</p>
+          <p style="margin:4px 0;font-size:13px;color:#4b5563;">Batch status: ${esc(invoice.batchDetails.status)}</p>
           <p style="margin:4px 0;font-size:13px;color:#4b5563;">Submitted: ${new Date(invoice.batchDetails.submittedAt).toLocaleDateString()}</p>
         </div>
         <div class="qr-area">
-          <div class="qr">${invoice.invoiceNumber}<br/>${invoice.amount} ${invoice.currency}<br/>${invoice.transactionRef || ""}</div>
+          <div class="qr">${esc(invoice.invoiceNumber)}<br/>${esc(invoice.pricing.total)} ${esc(invoice.pricing.currency)}<br/>${esc(invoice.transactionRef)}</div>
           <p style="font-size:11px;color:#6b7280;margin-top:8px;">Scan or provide this invoice number for verification.</p>
         </div>
       </body></html>

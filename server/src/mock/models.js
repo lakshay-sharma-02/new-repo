@@ -1,5 +1,6 @@
 import { getCollection } from "./store.js";
 import bcrypt from "bcryptjs";
+import { priceFor } from "../lib/pricing.js";
 
 /**
  * Mock models that mimic the Mongoose model interface.
@@ -62,11 +63,27 @@ function createMockModel(collectionName, hooks = {}) {
 
 const userCol = getCollection("users");
 
-function addComparePassword(doc) {
+function attachUserMethods(doc) {
   if (!doc) return doc;
+  const col = getCollection("users");
+
   doc.comparePassword = async function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
   };
+
+  // Mirror the Mongoose pre-save hook: hash whenever the password value
+  // changes. Without this, PATCH /users/:id/password stored plaintext and
+  // locked the account out of every future login.
+  const persist = doc.save;
+  doc.save = async function () {
+    const stored = col.docs.find((d) => d._id === doc._id);
+    if (typeof doc.password === "string" && stored && doc.password !== stored.password) {
+      doc.password = await bcrypt.hash(doc.password, 10);
+    }
+    if (persist) return persist.call(this);
+    return doc;
+  };
+
   return doc;
 }
 
@@ -74,24 +91,28 @@ export const MockUser = {
   async findOne(query) {
     const col = getCollection("users");
     const doc = await col.findOne(query);
-    return addComparePassword(doc);
+    return attachUserMethods(doc);
   },
 
   async find(query = {}) {
     const col = getCollection("users");
     const docs = await col.find(query);
-    return docs.map(addComparePassword);
+    return docs.map(attachUserMethods);
   },
 
   async findById(id) {
     const col = getCollection("users");
     const doc = await col.findOne({ _id: id });
-    return addComparePassword(doc);
+    return attachUserMethods(doc);
   },
 
   async create(data) {
     const col = getCollection("users");
-    const doc = { ...data };
+    const doc = {
+      ...data,
+      emailVerified: data.emailVerified ?? false,
+      deletedAt: data.deletedAt ?? null,
+    };
     // Hash password before saving
     if (doc.password) {
       doc.password = await bcrypt.hash(doc.password, 10);
@@ -151,14 +172,20 @@ export const MockLaundryBatch = {
   },
 
   async create(data) {
-    const doc = { ...data };
+    const doc = {
+      ...data,
+      issueReported: data.issueReported ?? false,
+      issueResolved: data.issueResolved ?? false,
+      paid: data.paid ?? false,
+      lateDrop: data.lateDrop ?? false,
+    };
     // Simulate pre-save: add statusHistory
     if (!doc.statusHistory) {
       doc.statusHistory = [
         { status: doc.status || "submitted", updatedAt: new Date().toISOString() },
       ];
     }
-    return batchCol.create(doc);
+    return attachSave(await batchCol.create(doc));
   },
 
   async findOneAndUpdate(query, update, options = {}) {
@@ -227,8 +254,7 @@ const serviceCol = getCollection("services");
 function addServiceMethods(doc) {
   if (!doc) return doc;
   doc.priceFor = function (size) {
-    const key = `price${String(size || "").charAt(0).toUpperCase()}${String(size || "").slice(1).toLowerCase()}`;
-    return this[key] || 0;
+    return priceFor(this, size);
   };
   doc.save = async function () {
     const idx = serviceCol.docs.findIndex((d) => d._id === doc._id);
@@ -255,7 +281,7 @@ export const MockService = {
     return docs.map(addServiceMethods);
   },
   async create(data) {
-    const doc = serviceCol.create(data);
+    const doc = await serviceCol.create(data);
     return addServiceMethods(doc);
   },
   async findOneAndUpdate(query, update, options = {}) {
@@ -371,3 +397,7 @@ export const MockPayment = {
 // --- Review Model ---
 
 export const MockReview = createMockModel("reviews");
+
+export const MockAuthToken = createMockModel("authtokens");
+
+export const MockSupportTicket = createMockModel("supporttickets");

@@ -31,6 +31,14 @@ const userSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+    emailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

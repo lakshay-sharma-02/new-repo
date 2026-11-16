@@ -55,4 +55,7 @@ reviewSchema.methods.setAnonymousName = function (realName) {
   }
 };
 
+reviewSchema.index({ user: 1, batch: 1 });
+reviewSchema.index({ createdAt: -1 });
+
 export default mongoose.model("Review", reviewSchema);

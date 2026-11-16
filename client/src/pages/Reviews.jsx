@@ -39,7 +39,7 @@ export default function Reviews() {
 
   const fetchReviews = useCallback(async () => {
     try {
-      const res = await api.get("/api/reviews");
+      const res = await api.get("/reviews");
       setData(res.data || { average: 0, total: 0, breakdown: {}, reviews: [] });
     } catch (err) {
       toast.error("Failed to load reviews");
@@ -51,7 +51,7 @@ export default function Reviews() {
   const fetchUsableBatches = useCallback(async () => {
     if (!user) return;
     try {
-      const res = await api.get("/api/reviews/usable-batches");
+      const res = await api.get("/reviews/usable-batches");
       setUsableBatches(res.data || []);
     } catch {
       /* ignore */
@@ -75,7 +75,7 @@ export default function Reviews() {
     }
     setSubmitting(true);
     try {
-      await api.post("/api/reviews", {
+      await api.post("/reviews", {
         rating,
         comment: comment.trim(),
         batch: selectedBatch || undefined,

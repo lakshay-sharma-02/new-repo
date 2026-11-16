@@ -16,6 +16,9 @@ const statusHistorySchema = new mongoose.Schema(
       required: true,
     },
     note: { type: String, default: "" },
+    by: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+    byName: { type: String, default: "" },
+    reason: { type: String, default: "" },
     updatedAt: { type: Date, default: Date.now },
   },
   { _id: false }
@@ -81,9 +84,31 @@ const laundryBatchSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
+    issueResolvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    issueResolvedAt: {
+      type: Date,
+      default: null,
+    },
+    paid: {
+      type: Boolean,
+      default: false,
+    },
+    lateDrop: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
+
+// Query patterns: a student's history, a block's live queue, warden overview.
+laundryBatchSchema.index({ user: 1, createdAt: -1 });
+laundryBatchSchema.index({ hostelBlock: 1, status: 1 });
+laundryBatchSchema.index({ status: 1, createdAt: -1 });
 
 // Record status changes in history — exactly one entry per transition.
 laundryBatchSchema.pre("save", function (next) {

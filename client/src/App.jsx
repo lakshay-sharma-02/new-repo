@@ -5,6 +5,8 @@ import Navbar from "./components/Navbar";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import StaffConsole from "./pages/StaffConsole";
 import TimingsSetup from "./pages/TimingsSetup";
@@ -79,6 +81,8 @@ function Shell() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={user ? <Home /> : <Login />} />
           <Route path="/register" element={user ? <Home /> : <Register />} />
+          <Route path="/forgot-password" element={user ? <Home /> : <ForgotPassword />} />
+          <Route path="/reset-password" element={user ? <Home /> : <ResetPassword />} />
 
           <Route
             path="/staff"

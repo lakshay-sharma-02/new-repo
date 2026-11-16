@@ -1,52 +1,52 @@
 import { Router } from "express";
 import { LaundryBatch, LaundryTimings } from "../models/index.js";
 import { authenticate } from "../middleware/auth.js";
+import { config } from "../config.js";
+import { historyEntry, LABELS, nextStage } from "../domain/status.js";
+import { computeEstimatedReady } from "../services/schedule.js";
+import { asyncHandler, AppError } from "../lib/errors.js";
 
 const router = Router();
 
-const ORDER = ["submitted", "received", "washing", "drying", "folding", "ready", "picked_up"];
-const LABELS = {
-  submitted: "Submitted",
-  received: "Received",
-  washing: "Washing",
-  drying: "Drying",
-  folding: "Folding",
-  ready: "Ready for pickup",
-  picked_up: "Picked up",
-};
-
 /**
  * POST /api/demo/advance — DEMO MODE ONLY.
- *
- * Drives the floating "live demo" widget: it advances the *requesting
- * student's own* batches one stage at a time, or submits a fresh batch,
- * exactly as their block's staff would from the console.
- * In production this endpoint does not exist (404 when MOCK_MODE is off) —
- * real status changes happen through the staff console.
+ * Advances the requesting student's oldest batch one stage, or starts a fresh
+ * batch. Real status changes happen through the staff console.
  */
-router.post("/advance", authenticate, async (req, res) => {
-  if (process.env.MOCK_MODE !== "true") {
-    return res.status(404).json({ error: "Demo endpoints are disabled" });
-  }
-  if (req.user.role !== "student") {
-    return res.status(403).json({ error: "Staff use the console — demo driver is for students" });
-  }
+router.post(
+  "/advance",
+  authenticate,
+  asyncHandler(async (req, res) => {
+    if (!config.mockMode) {
+      throw new AppError(404, "Demo endpoints are disabled");
+    }
+    if (req.user.role !== "student") {
+      throw new AppError(403, "Staff use the console — demo driver is for students");
+    }
 
-  try {
     const mine = await LaundryBatch.find({ user: req.user.id });
-    const active = mine.filter((b) => b.status !== "picked_up");
+    const active = mine.filter((batch) => batch.status !== "picked_up");
     active.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-    // Advance the oldest active batch one stage
     if (active.length > 0) {
       const target = active[0];
-      const idx = ORDER.indexOf(target.status);
-      const next = ORDER[idx + 1];
+      const next = nextStage(target.status);
       if (!next) {
         return res.json({ ok: false, reason: "all_done", batch: target });
       }
+
+      target.statusHistory = target.statusHistory || [];
+      target.statusHistory.push(
+        historyEntry({
+          status: next,
+          by: null,
+          byName: "Demo simulator",
+          reason: "Auto-advance (demo)",
+        })
+      );
       target.status = next;
       await target.save();
+
       return res.json({
         ok: true,
         action: "advanced",
@@ -55,43 +55,46 @@ router.post("/advance", authenticate, async (req, res) => {
       });
     }
 
-    // Nothing active — start a fresh batch if the block has a schedule
-    const allSchedules = await LaundryTimings.find({});
-    const schedule = allSchedules.find(
-      (s) => String(s.hostelBlock).toUpperCase() === String(req.user.hostelBlock || "").toUpperCase()
+    const schedules = await LaundryTimings.find({});
+    const schedule = schedules.find(
+      (item) =>
+        String(item.hostelBlock).toUpperCase() ===
+        String(req.user.hostelBlock || "").toUpperCase()
     );
     if (!schedule) {
-      return res.json({ ok: false, reason: "no_schedule", message: "No published schedule for your block yet." });
+      return res.json({
+        ok: false,
+        reason: "no_schedule",
+        message: "No published schedule for your block yet.",
+      });
     }
 
-    const items = [
+    const descriptions = [
       "2 shirts, 3 tees, 1 hoodie",
       "Bed sheets + pillow covers",
       "4 t-shirts, 2 track pants",
       "Jeans, kurta, 5 tees",
       "Towel set + gym wear",
     ];
-    const sizes = ["small", "medium", "large"];
-    const estimate = new Date();
-    estimate.setDate(estimate.getDate() + (schedule.turnaroundDays || 2));
+    const sizes = ["small", "medium", "large", "xl"];
 
     const batch = await LaundryBatch.create({
       user: req.user.id,
       hostelBlock: schedule.hostelBlock,
-      description: items[Math.floor(Math.random() * items.length)],
+      description: descriptions[Math.floor(Math.random() * descriptions.length)],
       itemEstimate: sizes[Math.floor(Math.random() * sizes.length)],
       status: "submitted",
-      estimatedReady: estimate,
+      estimatedReady: computeEstimatedReady(schedule),
+      lateDrop: false,
     });
+
     return res.status(201).json({
       ok: true,
       action: "created",
       message: "New batch submitted",
       batch,
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
 export default router;

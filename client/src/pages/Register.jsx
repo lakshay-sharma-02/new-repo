@@ -65,8 +65,8 @@ export default function Register() {
 
             <div>
               <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Password</label>
-              <input type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)}
-                className="field" placeholder="Min 6 characters" autoComplete="new-password" />
+              <input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)}
+                className="field" placeholder="8+ characters, letters & numbers" autoComplete="new-password" />
             </div>
 
             <div>

@@ -15,28 +15,45 @@ class Collection {
     return crypto.randomBytes(12).toString("hex");
   }
 
+  _getPath(doc, path) {
+    return String(path)
+      .split(".")
+      .reduce((value, part) => (value == null ? undefined : value[part]), doc);
+  }
+
   _matchesQuery(doc, query) {
     for (const [key, value] of Object.entries(query)) {
       if (key === "$or") {
-        const matchAny = value.some((subQuery) =>
-          this._matchesQuery(doc, subQuery)
-        );
+        const matchAny = value.some((subQuery) => this._matchesQuery(doc, subQuery));
         if (!matchAny) return false;
         continue;
       }
+
+      const actual = this._getPath(doc, key);
+
       if (typeof value === "object" && value !== null && !Array.isArray(value)) {
-        // Handle operators like $regex, $in, etc.
+        // Support the handful of operators the models actually use.
         for (const [op, opVal] of Object.entries(value)) {
           if (op === "$regex") {
-            if (!new RegExp(opVal).test(doc[key])) return false;
+            if (!new RegExp(opVal).test(String(actual ?? ""))) return false;
           } else if (op === "$in") {
-            if (!opVal.includes(doc[key])) return false;
+            if (!opVal.map(String).includes(String(actual))) return false;
           } else if (op === "$ne") {
-            if (doc[key] === opVal) return false;
+            if (actual === opVal) return false;
+          } else if (op === "$exists") {
+            if ((actual !== undefined) !== Boolean(opVal)) return false;
+          } else if (op === "$gt") {
+            if (!(actual > opVal)) return false;
+          } else if (op === "$gte") {
+            if (!(actual >= opVal)) return false;
+          } else if (op === "$lt") {
+            if (!(actual < opVal)) return false;
+          } else if (op === "$lte") {
+            if (!(actual <= opVal)) return false;
           }
         }
-      } else {
-        if (doc[key] !== value) return false;
+      } else if (actual !== value) {
+        return false;
       }
     }
     return true;
@@ -75,11 +92,16 @@ class Collection {
           cloned.status !== original.status
         ) {
           cloned.statusHistory = cloned.statusHistory || [];
-          cloned.statusHistory.push({
-            status: cloned.status,
-            note: cloned.note || "",
-            updatedAt: new Date().toISOString(),
-          });
+          const previous = cloned.statusHistory[cloned.statusHistory.length - 1];
+          // Routes record the actor themselves; only synthesise a minimal
+          // entry when nothing was recorded for this status.
+          if (!previous || previous.status !== cloned.status) {
+            cloned.statusHistory.push({
+              status: cloned.status,
+              note: cloned.note || "",
+              updatedAt: new Date().toISOString(),
+            });
+          }
         }
         cloned.updatedAt = new Date().toISOString();
         // Remove the save method before storing

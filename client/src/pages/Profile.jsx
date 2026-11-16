@@ -12,7 +12,7 @@ const ROLE_LABELS = {
 
 function PasswordStrength({ password }) {
   const checks = [
-    { label: "At least 6 characters", test: password.length >= 6 },
+    { label: "At least 8 characters", test: password.length >= 8 },
     { label: "Contains a number", test: /\d/.test(password) },
     { label: "Contains a symbol", test: /[!@#$%^&*(),.?":{}|<>]/.test(password) },
     { label: "Mixed case", test: /[a-z]/.test(password) && /[A-Z]/.test(password) },
@@ -69,7 +69,7 @@ export default function Profile() {
   const fetchOrders = useCallback(async () => {
     if (!user) return;
     try {
-      const [bRes, pRes] = await Promise.all([api.get("/api/batches"), api.get("/api/payments")]);
+      const [bRes, pRes] = await Promise.all([api.get("/batches"), api.get("/payments")]);
       setBatches(bRes.data || []);
       setPayments(pRes.data || []);
     } catch {
@@ -85,7 +85,7 @@ export default function Profile() {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await api.patch(`/api/users/${user._id}/profile`, { name, hostelBlock });
+      const res = await api.patch(`/users/${user._id}/profile`, { name, hostelBlock });
       toast.success("Profile updated");
       // Refresh auth context with updated user data
       await refreshUser();
@@ -106,13 +106,13 @@ export default function Profile() {
       toast.error("New passwords don't match");
       return;
     }
-    if (newPassword.length < 6) {
-      toast.error("Password must be at least 6 characters");
+    if (newPassword.length < 8) {
+      toast.error("Password must be at least 8 characters");
       return;
     }
     setPwLoading(true);
     try {
-      await api.patch(`/api/users/${user._id}/password`, { currentPassword, newPassword });
+      await api.patch(`/users/${user._id}/password`, { currentPassword, newPassword });
       toast.success("Password changed");
       setCurrentPassword("");
       setNewPassword("");
@@ -201,7 +201,7 @@ export default function Profile() {
               className="field"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Min 6 characters"
+              placeholder="Min 8 characters"
               autoComplete="new-password"
               required
             />

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { priceFor } from "../lib/pricing.js";
 
 const serviceSchema = new mongoose.Schema(
   {
@@ -42,11 +43,10 @@ const serviceSchema = new mongoose.Schema(
 );
 
 /**
- * Look up a price for a given item size.
+ * Look up a price for a given item size (small / medium / large / xl).
  */
 serviceSchema.methods.priceFor = function (size) {
-  const key = `price${size.charAt(0).toUpperCase()}${size.slice(1).toLowerCase()}`;
-  return this[key] || 0;
+  return priceFor(this, size);
 };
 
 export default mongoose.model("Service", serviceSchema);

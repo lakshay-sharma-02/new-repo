@@ -39,6 +39,20 @@ const paymentSchema = new mongoose.Schema(
     invoiceUrl: {
       type: String,
     },
+    idempotencyKey: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
+    refundedAt: {
+      type: Date,
+      default: null,
+    },
+    refundReason: {
+      type: String,
+      default: "",
+    },
     // Snapshot of the price breakdown for record keeping
     breakdown: {
       subtotal: { type: Number, default: 0 },
@@ -57,6 +71,9 @@ const paymentSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+paymentSchema.index({ user: 1, createdAt: -1 });
+paymentSchema.index({ status: 1, createdAt: -1 });
 
 // Generate the invoice URL lazily — stored on the document for later retrieval
 paymentSchema.virtual("invoiceNumber").get(function () {

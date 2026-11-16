@@ -1,201 +1,201 @@
 import { Router } from "express";
 import { Review, User, LaundryBatch } from "../models/index.js";
 import { authenticate, requireRole } from "../middleware/auth.js";
+import { validate } from "../lib/validate.js";
+import { schemas } from "../lib/schemas.js";
+import { AppError, asyncHandler } from "../lib/errors.js";
+import { writeLimiter } from "../middleware/rateLimit.js";
 
 const router = Router();
 
 const DONE_STATUSES = ["ready", "picked_up"];
 
-/**
- * GET /api/reviews — public reviews feed
- * Returns aggregate stats + list of reviews (most recent first).
- */
-router.get("/", async (req, res) => {
-  try {
+function publicReview(review) {
+  return {
+    _id: review._id,
+    rating: review.rating,
+    comment: review.comment,
+    anonymousName: review.anonymousName,
+    createdAt: review.createdAt,
+  };
+}
+
+// GET /api/reviews — public feed + aggregate stats
+router.get(
+  "/",
+  asyncHandler(async (_req, res) => {
     const all = await Review.find({});
-    const ratings = all.map((r) => r.rating);
-    const avg = ratings.length > 0 ? (ratings.reduce((a, b) => a + b, 0) / ratings.length) : 0;
+    const ratings = all.map((review) => review.rating);
+    const average =
+      ratings.length > 0
+        ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+        : 0;
 
     const breakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-    all.forEach((r) => { if (r.rating >= 1 && r.rating <= 5) breakdown[r.rating]++; });
+    all.forEach((review) => {
+      if (review.rating >= 1 && review.rating <= 5) breakdown[review.rating]++;
+    });
 
     all.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     res.json({
-      averageRating: Number(avg.toFixed(1)),
-      totalReviews: all.length,
+      average: Number(average.toFixed(1)),
+      total: all.length,
       breakdown,
-      reviews: all.slice(0, 50),
+      reviews: all.slice(0, 50).map(publicReview),
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-/**
- * GET /api/reviews/mine — current user's reviews
- */
-router.get("/mine", authenticate, async (req, res) => {
-  try {
+// GET /api/reviews/mine
+router.get(
+  "/mine",
+  authenticate,
+  asyncHandler(async (req, res) => {
     const mine = await Review.find({ user: req.user.id });
     mine.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     res.json(mine);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-/**
- * GET /api/reviews/usable-batches — completed batches the current user can review
- */
-router.get("/usable-batches", authenticate, async (req, res) => {
-  try {
+// GET /api/reviews/usable-batches
+router.get(
+  "/usable-batches",
+  authenticate,
+  asyncHandler(async (req, res) => {
     const batches = await LaundryBatch.find({ user: req.user.id });
-    const done = batches.filter((b) => DONE_STATUSES.includes(b.status));
-    // Exclude batches already reviewed
+    const done = batches.filter((batch) => DONE_STATUSES.includes(batch.status));
     const reviewed = await Review.find({ user: req.user.id });
-    const reviewedBatchIds = new Set(reviewed.map((r) => String(r.batch)));
-    const usable = done.filter((b) => !reviewedBatchIds.has(String(b._id)));
+    const reviewedBatchIds = new Set(reviewed.map((review) => String(review.batch)));
 
     res.json(
-      usable.map((b) => ({
-        _id: b._id,
-        description: b.description,
-        status: b.status,
-        hostelBlock: b.hostelBlock,
-        createdAt: b.createdAt,
-        estimatedReady: b.estimatedReady,
-      }))
+      done
+        .filter((batch) => !reviewedBatchIds.has(String(batch._id)))
+        .map((batch) => ({
+          _id: batch._id,
+          description: batch.description,
+          status: batch.status,
+          hostelBlock: batch.hostelBlock,
+          createdAt: batch.createdAt,
+          estimatedReady: batch.estimatedReady,
+        }))
     );
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-/**
- * POST /api/reviews — create a review
- * Body: { rating, comment, batch? }
- */
-router.post("/", authenticate, async (req, res) => {
-  try {
-    const { rating, comment = "", batch } = req.body;
-
-    if (!rating || rating < 1 || rating > 5) {
-      return res.status(400).json({ error: "Rating must be 1–5" });
-    }
+// POST /api/reviews
+router.post(
+  "/",
+  authenticate,
+  writeLimiter,
+  validate({ body: schemas.review }),
+  asyncHandler(async (req, res) => {
+    const { rating, comment, batch } = req.body;
 
     let batchId = batch || null;
-    // If linking to a batch, verify eligibility
     if (batchId) {
-      const b = await LaundryBatch.findOne({ _id: batchId });
-      if (!b) return res.status(400).json({ error: "Batch not found" });
-      if (String(b.user) !== req.user.id) return res.status(403).json({ error: "Not your batch to review" });
-      if (!DONE_STATUSES.includes(b.status)) {
-        return res.status(400).json({ error: "Batch must be picked up or ready to review" });
+      const target = await LaundryBatch.findOne({ _id: batchId });
+      if (!target) throw new AppError(400, "Batch not found");
+      if (String(target.user) !== req.user.id) {
+        throw new AppError(403, "Not your batch to review");
+      }
+      if (!DONE_STATUSES.includes(target.status)) {
+        throw new AppError(400, "Batch must be ready or picked up to review");
       }
       const already = await Review.findOne({ user: req.user.id, batch: batchId });
-      if (already) return res.status(400).json({ error: "You already reviewed this batch" });
+      if (already) throw new AppError(400, "You already reviewed this batch");
     }
 
-    // Build anonymous display name
     const anonName = req.user.name
       ? (() => {
           const parts = req.user.name.trim().split(/\s+/);
           const first = parts[0] || "";
           const lastInit = parts.length > 1 ? parts[parts.length - 1][0] : "";
-          return first.charAt(0).toUpperCase() + first.slice(1) + (lastInit ? lastInit.toUpperCase() + "." : "");
+          return (
+            first.charAt(0).toUpperCase() +
+            first.slice(1) +
+            (lastInit ? lastInit.toUpperCase() + "." : "")
+          );
         })()
       : "Guest";
 
     const review = await Review.create({
       user: req.user.id,
       batch: batchId,
-      rating: Number(rating),
+      rating,
       comment,
       anonymousName: anonName,
       anonymous: true,
     });
 
     res.status(201).json(review);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-/**
- * GET /api/reviews/stats — aggregate rating stats
- * Returns: average rating, count by stars
- */
-router.get("/stats", async (req, res) => {
-  try {
+// GET /api/reviews/stats
+router.get(
+  "/stats",
+  asyncHandler(async (_req, res) => {
     const reviews = await Review.find({});
     const total = reviews.length;
-    const avg = total > 0 ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / total) * 10) / 10 : 0;
+    const average =
+      total > 0
+        ? Math.round(
+            (reviews.reduce((sum, review) => sum + review.rating, 0) / total) * 10
+          ) / 10
+        : 0;
 
     const byStars = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    for (const r of reviews) {
-      byStars[r.rating] = (byStars[r.rating] || 0) + 1;
+    for (const review of reviews) {
+      byStars[review.rating] = (byStars[review.rating] || 0) + 1;
     }
 
-    res.json({
-      average: avg,
-      total,
-      byStars,
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    res.json({ average, total, byStars });
+  })
+);
 
-/**
- * GET /api/reviews/service-rating — overall service rating summary
- * Returns: average, total, sentiment breakdown, recent reviews
- */
-router.get("/service-rating", async (req, res) => {
-  try {
+// GET /api/reviews/service-rating
+router.get(
+  "/service-rating",
+  asyncHandler(async (_req, res) => {
     const reviews = await Review.find({});
     const total = reviews.length;
-    const avg = total > 0 ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / total) * 10) / 10 : 0;
-
-    const positive = reviews.filter((r) => r.rating >= 4).length;
-    const neutral = reviews.filter((r) => r.rating === 3).length;
-    const negative = reviews.filter((r) => r.rating <= 2).length;
+    const average =
+      total > 0
+        ? Math.round(
+            (reviews.reduce((sum, review) => sum + review.rating, 0) / total) * 10
+          ) / 10
+        : 0;
 
     const recent = [...reviews]
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .slice(0, 5)
-      .map((r) => ({
-        _id: r._id,
-        rating: r.rating,
-        comment: r.comment,
-        anonymousName: r.anonymousName,
-        createdAt: r.createdAt,
-      }));
+      .map(publicReview);
 
     res.json({
-      average: avg,
+      average,
       total,
-      breakdown: { positive, neutral, negative },
+      breakdown: {
+        positive: reviews.filter((review) => review.rating >= 4).length,
+        neutral: reviews.filter((review) => review.rating === 3).length,
+        negative: reviews.filter((review) => review.rating <= 2).length,
+      },
       recent,
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-/**
- * GET /api/reviews/:id — single review detail (admin only)
- */
-router.get("/:id", requireRole("warden"), async (req, res) => {
-  try {
+// GET /api/reviews/:id — warden only
+router.get(
+  "/:id",
+  requireRole("warden"),
+  asyncHandler(async (req, res) => {
     const review = await Review.findOne({ _id: req.params.id });
-    if (!review) return res.status(404).json({ error: "Review not found" });
+    if (!review) throw new AppError(404, "Review not found");
 
-    const u = await User.findOne({ _id: review.user });
-    res.json({ review, userName: u?.name, userEmail: u?.email });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    const user = await User.findOne({ _id: review.user });
+    res.json({ review, userName: user?.name, userEmail: user?.email });
+  })
+);
 
 export default router;

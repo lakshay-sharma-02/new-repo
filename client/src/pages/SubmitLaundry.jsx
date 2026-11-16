@@ -7,8 +7,15 @@ const SIZES = [
   { value: "small", label: "Small", hint: "1–5 items", icon: "🎒" },
   { value: "medium", label: "Medium", hint: "6–12 items", icon: "🛍️" },
   { value: "large", label: "Large", hint: "13–20 items", icon: "🧳" },
-  { value: "extra-large", label: "XL", hint: "20+ items", icon: "📦" },
+  { value: "xl", label: "XL", hint: "20+ items", icon: "📦" },
 ];
+
+function newCheckoutKey() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `key-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
 
 export default function SubmitLaundry() {
   const navigate = useNavigate();
@@ -28,6 +35,7 @@ export default function SubmitLaundry() {
   const [couponCode, setCouponCode] = useState("");
   const [applyingCoupon, setApplyingCoupon] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const [checkoutKey, setCheckoutKey] = useState("");
 
   useEffect(() => {
     api.get("/timings")
@@ -53,6 +61,7 @@ export default function SubmitLaundry() {
         couponCode: couponCode || undefined,
       });
       setPriceQuote(res.data);
+      setCheckoutKey(newCheckoutKey());
       setShowPricing(true);
       toast.success("Price calculated");
     } catch (err) {
@@ -89,28 +98,18 @@ export default function SubmitLaundry() {
     if (!priceQuote) return;
     setProcessingPayment(true);
     try {
-      // Step 1: Create the batch
-      const batchRes = await api.post("/batches", { description, itemEstimate });
-      const batch = batchRes.data;
-
-      // Step 2: Process payment
-      const paymentRes = await api.post("/payments/process", {
-        amount: priceQuote.total,
-        breakdown: {
-          subtotal: priceQuote.subtotal,
-          discount: priceQuote.discount,
-          tax: priceQuote.tax,
-          total: priceQuote.total,
-          couponCode: priceQuote.couponCode || "",
-          items: priceQuote.items,
-        },
-        batchId: batch._id,
-        method: "upi",
+      // One request: the server prices, validates the schedule, creates the
+      // batch and records the payment. The idempotency key makes retries safe.
+      const res = await api.post("/payments/checkout", {
+        description,
+        itemEstimate,
         couponCode: priceQuote.couponCode || undefined,
+        method: "upi",
+        idempotencyKey: checkoutKey || undefined,
       });
 
       toast.success("Batch submitted & payment processed!");
-      navigate(`/track/${batch._id}`, { replace: true });
+      navigate(`/track/${res.data.batch._id}`, { replace: true });
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to complete transaction");
     } finally {

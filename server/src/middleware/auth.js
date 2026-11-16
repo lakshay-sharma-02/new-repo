@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/index.js";
+import { config } from "../config.js";
 
 /**
  * Verifies the JWT and attaches req.userId + req.user
@@ -15,9 +16,13 @@ export async function authenticate(req, res, next) {
   const token = header.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, config.jwtSecret);
+    if (decoded.typ && decoded.typ !== "access") {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
     const user = await User.findById(decoded.userId);
-    if (!user) {
+    if (!user || user.deletedAt) {
       return res.status(401).json({ error: "Account no longer exists" });
     }
 
@@ -28,6 +33,7 @@ export async function authenticate(req, res, next) {
       email: user.email || "",
       role: user.role || "student",
       hostelBlock: (user.hostelBlock || "").trim(),
+      emailVerified: Boolean(user.emailVerified),
     };
     next();
   } catch {

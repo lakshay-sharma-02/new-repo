@@ -1,50 +1,50 @@
 import { Router } from "express";
-import { User, LaundryBatch, Payment, Service, Coupon, Review } from "../models/index.js";
+import { User, LaundryBatch, Payment, Service } from "../models/index.js";
 import { authenticate, requireRole } from "../middleware/auth.js";
+import { validate } from "../lib/validate.js";
+import { schemas } from "../lib/schemas.js";
+import { AppError, asyncHandler } from "../lib/errors.js";
+import { STAGES } from "../domain/status.js";
+import {
+  assertCanChangeRole,
+  assertCanDeleteUser,
+  anonymizeAndDelete,
+} from "../services/users.js";
+import { TOKEN_KINDS, revokeAllTokens } from "../services/authTokens.js";
 
 const router = Router();
 router.use(authenticate);
 router.use(requireRole("warden"));
 
-const ORDER = ["submitted", "received", "washing", "drying", "folding", "ready", "picked_up"];
+/* ---------- Users ---------- */
 
-/* ---------- Users (admin namespace) ---------- */
-
-/**
- * GET /api/admin/users — list all users
- * Returns: name, email, role, block, join date
- */
-router.get("/users", async (req, res) => {
-  try {
+router.get(
+  "/users",
+  asyncHandler(async (req, res) => {
     const { role } = req.query;
-    let users = await User.find({});
-
-    if (role) {
-      users = users.filter((u) => u.role === role);
-    }
+    const all = await User.find({});
+    let users = all.filter((user) => !user.deletedAt);
+    if (role) users = users.filter((user) => user.role === role);
 
     res.json(
-      users.map((u) => ({
-        id: u._id,
-        name: u.name,
-        email: u.email,
-        role: u.role,
-        hostelBlock: u.hostelBlock,
-        createdAt: u.createdAt,
+      users.map((user) => ({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        hostelBlock: user.hostelBlock,
+        emailVerified: Boolean(user.emailVerified),
+        createdAt: user.createdAt,
       }))
     );
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-/**
- * GET /api/admin/users/:id — user detail
- */
-router.get("/users/:id", async (req, res) => {
-  try {
+router.get(
+  "/users/:id",
+  asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user || user.deletedAt) throw new AppError(404, "User not found");
 
     const batches = await LaundryBatch.find({ user: user._id });
     const payments = await Payment.find({ user: user._id });
@@ -55,45 +55,40 @@ router.get("/users/:id", async (req, res) => {
       email: user.email,
       role: user.role,
       hostelBlock: user.hostelBlock,
+      emailVerified: Boolean(user.emailVerified),
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       stats: {
         batchCount: batches.length,
-        paidAmount: payments.filter((p) => p.status === "success").reduce((s, p) => s + p.amount, 0),
-        pendingBatches: batches.filter((b) => b.status !== "picked_up").length,
+        paidAmount: payments
+          .filter((payment) => payment.status === "success")
+          .reduce((sum, payment) => sum + payment.amount, 0),
+        pendingBatches: batches.filter((batch) => batch.status !== "picked_up").length,
       },
-      batches: batches.map((b) => ({
-        _id: b._id,
-        status: b.status,
-        hostelBlock: b.hostelBlock,
-        description: b.description,
-        createdAt: b.createdAt,
+      batches: batches.map((batch) => ({
+        _id: batch._id,
+        status: batch.status,
+        hostelBlock: batch.hostelBlock,
+        description: batch.description,
+        createdAt: batch.createdAt,
       })),
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-/**
- * PATCH /api/admin/users/:id — update role or block
- */
-router.patch("/users/:id", async (req, res) => {
-  try {
+router.patch(
+  "/users/:id",
+  validate({ body: schemas.adminUserPatch }),
+  asyncHandler(async (req, res) => {
     const { role, hostelBlock } = req.body;
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ error: "User not found" });
 
-    if (role) {
-      const validRoles = ["student", "staff", "warden"];
-      if (!validRoles.includes(role)) {
-        return res.status(400).json({ error: "Invalid role" });
-      }
-      user.role = role;
-    }
-    if (hostelBlock !== undefined) {
-      user.hostelBlock = hostelBlock || "";
-    }
+    const user = await User.findById(req.params.id);
+    if (!user || user.deletedAt) throw new AppError(404, "User not found");
+
+    if (role) await assertCanChangeRole(req.user, user, role);
+
+    if (role) user.role = role;
+    if (hostelBlock !== undefined) user.hostelBlock = hostelBlock || "";
 
     await user.save();
 
@@ -104,168 +99,140 @@ router.patch("/users/:id", async (req, res) => {
       role: user.role,
       hostelBlock: user.hostelBlock,
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-/**
- * DELETE /api/admin/users/:id — remove a user
- */
-router.delete("/users/:id", async (req, res) => {
-  try {
+router.delete(
+  "/users/:id",
+  asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user || user.deletedAt) throw new AppError(404, "User not found");
 
-    // Don't allow removing the last warden
-    if (user.role === "warden") {
-      const wardens = (await User.find({})).filter((u) => u.role === "warden");
-      if (wardens.length <= 1) {
-        return res.status(400).json({ error: "Cannot remove the last warden" });
-      }
-    }
+    const name = user.name;
+    await assertCanDeleteUser(req.user, user);
+    await anonymizeAndDelete(user);
+    await revokeAllTokens(user._id, TOKEN_KINDS.REFRESH);
 
-    await User.findOneAndDelete({ _id: user._id });
-    res.json({ message: "User removed" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    res.json({ message: `${name} removed` });
+  })
+);
 
-/* ---------- Services (admin namespace) ---------- */
+/* ---------- Services ---------- */
 
-/**
- * GET /api/admin/services — list all service tiers
- */
-router.get("/services", async (req, res) => {
-  try {
+router.get(
+  "/services",
+  asyncHandler(async (_req, res) => {
+    res.json(await Service.find({}));
+  })
+);
+
+router.post(
+  "/services",
+  validate({ body: schemas.serviceCreate }),
+  asyncHandler(async (req, res) => {
+    const { name, priceSmall, priceMedium, priceLarge, priceXL, description, isDefault } =
+      req.body;
+
     const services = await Service.find({});
-    res.json(services);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-/**
- * POST /api/admin/services — add a new service tier
- */
-router.post("/services", async (req, res) => {
-  try {
-    const { name, priceSmall, priceMedium, priceLarge, priceXL, description, isDefault } = req.body;
-
-    if (!name) {
-      return res.status(400).json({ error: "Service name is required" });
-    }
-
-    // If isDefault, unset default on others
-    let services = await Service.find({});
     if (isDefault) {
-      for (const s of services) {
-        if (s.isDefault) {
-          s.isDefault = false;
-          await s.save();
+      for (const service of services) {
+        if (service.isDefault) {
+          service.isDefault = false;
+          await service.save();
         }
       }
     }
 
-    const service = await Service.create({
+    const created = await Service.create({
       name,
-      priceSmall: priceSmall || 120,
-      priceMedium: priceMedium || 180,
-      priceLarge: priceLarge || 250,
-      priceXL: priceXL || 350,
-      description: description || "",
-      isDefault: isDefault || services.length === 0,
+      priceSmall,
+      priceMedium,
+      priceLarge,
+      priceXL,
+      description,
+      isDefault: Boolean(isDefault) || services.length === 0,
     });
 
-    res.status(201).json(service);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+    res.status(201).json(created);
+  })
+);
 
-/**
- * PATCH /api/admin/services/:id — update a service tier
- */
-router.patch("/services/:id", async (req, res) => {
-  try {
-    const { name, priceSmall, priceMedium, priceLarge, priceXL, description, isDefault } = req.body;
+router.patch(
+  "/services/:id",
+  validate({ body: schemas.servicePatch }),
+  asyncHandler(async (req, res) => {
     const service = await Service.findById(req.params.id);
-    if (!service) return res.status(404).json({ error: "Service not found" });
+    if (!service) throw new AppError(404, "Service not found");
 
-    if (isDefault && !service.isDefault) {
+    if (req.body.isDefault && !service.isDefault) {
       const others = await Service.find({});
-      for (const s of others) {
-        if (s._id !== service._id && s.isDefault) {
-          s.isDefault = false;
-          await s.save();
+      for (const other of others) {
+        if (String(other._id) !== String(service._id) && other.isDefault) {
+          other.isDefault = false;
+          await other.save();
         }
       }
     }
 
-    if (name !== undefined) service.name = name;
-    if (priceSmall !== undefined) service.priceSmall = Number(priceSmall);
-    if (priceMedium !== undefined) service.priceMedium = Number(priceMedium);
-    if (priceLarge !== undefined) service.priceLarge = Number(priceLarge);
-    if (priceXL !== undefined) service.priceXL = Number(priceXL);
-    if (description !== undefined) service.description = description;
-    if (isDefault !== undefined) service.isDefault = isDefault;
+    for (const field of [
+      "name",
+      "priceSmall",
+      "priceMedium",
+      "priceLarge",
+      "priceXL",
+      "description",
+      "isDefault",
+    ]) {
+      if (req.body[field] !== undefined) service[field] = req.body[field];
+    }
 
     await service.save();
     res.json(service);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
-/**
- * DELETE /api/admin/services/:id — remove a service tier
- */
-router.delete("/services/:id", async (req, res) => {
-  try {
+router.delete(
+  "/services/:id",
+  asyncHandler(async (req, res) => {
     const service = await Service.findById(req.params.id);
-    if (!service) return res.status(404).json({ error: "Service not found" });
+    if (!service) throw new AppError(404, "Service not found");
+    if (service.isDefault) {
+      throw new AppError(400, "Cannot delete the default service tier");
+    }
 
     await Service.findOneAndDelete({ _id: service._id });
     res.json({ message: "Service tier removed" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
 /* ---------- Analytics ---------- */
 
-/**
- * GET /api/admin/analytics — dashboard metrics
- * Returns: total batches, revenue, avg processing time, issues by day
- */
-router.get("/analytics", async (req, res) => {
-  try {
+router.get(
+  "/analytics",
+  asyncHandler(async (_req, res) => {
     const batches = await LaundryBatch.find({});
     const payments = await Payment.find({});
 
-    // Total revenue
     const totalRevenue = payments
-      .filter((p) => p.status === "success")
-      .reduce((sum, p) => sum + (p.amount || 0), 0);
+      .filter((payment) => payment.status === "success")
+      .reduce((sum, payment) => sum + (payment.amount || 0), 0);
 
-    // Average processing time (from submitted to picked_up) in hours
     let totalHours = 0;
     let completedCount = 0;
-    for (const b of batches) {
-      if (b.status === "picked_up" && b.statusHistory && b.statusHistory.length >= 2) {
-        const submitted = new Date(b.statusHistory[0].updatedAt || b.createdAt);
-        const pickedUp = b.statusHistory.find((h) => h.status === "picked_up")?.updatedAt;
-        if (submitted && pickedUp) {
-          const hours = (new Date(pickedUp) - new Date(submitted)) / (1000 * 3600);
-          totalHours += hours;
-          completedCount++;
-        }
+    for (const batch of batches) {
+      if (batch.status !== "picked_up" || !batch.statusHistory?.length) continue;
+      const submitted = new Date(
+        batch.statusHistory[0].updatedAt || batch.createdAt
+      );
+      const pickedUp = batch.statusHistory.find(
+        (entry) => entry.status === "picked_up"
+      )?.updatedAt;
+      if (submitted && pickedUp) {
+        totalHours += (new Date(pickedUp) - submitted) / (1000 * 3600);
+        completedCount++;
       }
     }
-    const avgProcessingHours = completedCount > 0 ? Math.round((totalHours / completedCount) * 10) / 10 : 0;
 
-    // Issues by day (last 7 days)
     const now = new Date();
     const issuesByDay = [];
     for (let d = 6; d >= 0; d--) {
@@ -275,59 +242,60 @@ router.get("/analytics", async (req, res) => {
       const next = new Date(date);
       next.setDate(next.getDate() + 1);
 
-      const count = batches.filter(
-        (b) =>
-          b.issueReported &&
-          new Date(b.createdAt) >= date &&
-          new Date(b.createdAt) < next
-      ).length;
-
       issuesByDay.push({
         date: date.toISOString().split("T")[0],
-        count,
+        count: batches.filter(
+          (batch) =>
+            batch.issueReported &&
+            new Date(batch.createdAt) >= date &&
+            new Date(batch.createdAt) < next
+        ).length,
       });
     }
 
-    // Batches by status
     const batchesByStatus = {};
-    for (const s of ORDER) {
-      batchesByStatus[s] = batches.filter((b) => b.status === s).length;
+    for (const stage of STAGES) {
+      batchesByStatus[stage] = batches.filter((batch) => batch.status === stage).length;
     }
 
-    // Revenue by block
     const revenueByBlock = {};
-    for (const p of payments) {
-      if (p.status !== "success") continue;
-      let block = "Unknown";
-      if (p.batch) {
-        const batch = batches.find((b) => String(b._id) === String(p.batch));
-        if (batch) block = batch.hostelBlock || "Unknown";
-      }
-      revenueByBlock[block] = (revenueByBlock[block] || 0) + (p.amount || 0);
+    for (const payment of payments) {
+      if (payment.status !== "success") continue;
+      const batch = payment.batch
+        ? batches.find((item) => String(item._id) === String(payment.batch))
+        : null;
+      const block = batch?.hostelBlock || "Unknown";
+      revenueByBlock[block] = (revenueByBlock[block] || 0) + (payment.amount || 0);
     }
 
-    // User stats
     const users = await User.find({});
+    const activeUsers = users.filter((user) => !user.deletedAt);
     const usersByRole = {};
-    for (const u of users) {
-      usersByRole[u.role] = (usersByRole[u.role] || 0) + 1;
+    for (const user of activeUsers) {
+      usersByRole[user.role] = (usersByRole[user.role] || 0) + 1;
     }
 
     res.json({
       totalBatches: batches.length,
       completedBatches: batchesByStatus.picked_up,
-      activeBatches: batches.filter((b) => b.status !== "picked_up" && b.status !== "submitted").length,
+      activeBatches: batches.filter(
+        (batch) => batch.status !== "picked_up" && batch.status !== "submitted"
+      ).length,
+      openIssues: batches.filter(
+        (batch) => batch.issueReported && !batch.issueResolved
+      ).length,
       totalRevenue,
-      avgProcessingHours,
+      avgProcessingHours:
+        completedCount > 0
+          ? Math.round((totalHours / completedCount) * 10) / 10
+          : 0,
       batchesByStatus,
       issuesByDay,
       revenueByBlock,
       usersByRole,
-      totalUsers: users.length,
+      totalUsers: activeUsers.length,
     });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  })
+);
 
 export default router;

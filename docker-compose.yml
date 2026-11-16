@@ -1,0 +1,35 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MOCK_MODE: "false"
+      MONGODB_URI: mongodb://mongo:27017/laundry-roulette
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET to a strong random value}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5000}
+      SERVE_CLIENT: "true"
+      # Set true when serving over HTTPS, and COOKIE_SAME_SITE=none for cross-site.
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongo-data:

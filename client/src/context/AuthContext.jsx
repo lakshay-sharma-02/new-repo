@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import api from "../lib/api";
+import api, { setAccessToken } from "../lib/api";
 
 const AuthContext = createContext(null);
 
@@ -8,22 +8,36 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+    // Remove the legacy localStorage token from older builds.
+    localStorage.removeItem("token");
+
+    let cancelled = false;
+    const onExpired = () => setUser(null);
+    window.addEventListener("auth:expired", onExpired);
 
     api
-      .get("/auth/me")
-      .then((res) => setUser(res.data.user))
-      .catch(() => localStorage.removeItem("token"))
-      .finally(() => setLoading(false));
+      .post("/auth/refresh")
+      .then((res) => {
+        if (cancelled) return;
+        setAccessToken(res.data.accessToken);
+        setUser(res.data.user);
+      })
+      .catch(() => {
+        if (!cancelled) setUser(null);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("auth:expired", onExpired);
+    };
   }, []);
 
   const login = async (email, password) => {
     const res = await api.post("/auth/login", { email, password });
-    localStorage.setItem("token", res.data.token);
+    setAccessToken(res.data.accessToken);
     setUser(res.data.user);
     return res.data;
   };
@@ -35,13 +49,18 @@ export function AuthProvider({ children }) {
       password,
       hostelBlock,
     });
-    localStorage.setItem("token", res.data.token);
+    setAccessToken(res.data.accessToken);
     setUser(res.data.user);
     return res.data;
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch {
+      /* clearing local state is enough */
+    }
+    setAccessToken(null);
     setUser(null);
   };
 

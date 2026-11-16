@@ -27,7 +27,7 @@ export default function Payments() {
   const fetchPayments = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get("/api/payments");
+      const res = await api.get("/payments");
       setPayments(res.data || []);
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to load payments");

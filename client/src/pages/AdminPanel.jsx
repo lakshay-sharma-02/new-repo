@@ -53,7 +53,7 @@ export default function AdminPanel() {
   const fetchAnalytics = useCallback(async () => {
     setAnalyticsLoading(true);
     try {
-      const res = await api.get("/api/admin/analytics");
+      const res = await api.get("/admin/analytics");
       setAnalytics(res.data);
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to load analytics");
@@ -66,7 +66,7 @@ export default function AdminPanel() {
   const fetchPayments = useCallback(async () => {
     setPaymentsLoading(true);
     try {
-      const res = await api.get("/api/payments/all/admin?limit=100");
+      const res = await api.get("/payments/all/admin?limit=100");
       setPayments(res.data.payments || []);
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to load payments");
@@ -79,7 +79,7 @@ export default function AdminPanel() {
   const fetchServices = useCallback(async () => {
     setServicesLoading(true);
     try {
-      const res = await api.get("/api/admin/services");
+      const res = await api.get("/admin/services");
       setServices(res.data || []);
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to load services");
@@ -93,10 +93,10 @@ export default function AdminPanel() {
     setSaving(true);
     try {
       if (editingService) {
-        await api.patch(`/api/admin/services/${editingService._id}`, serviceForm);
+        await api.patch(`/admin/services/${editingService._id}`, serviceForm);
         toast.success("Service updated");
       } else {
-        await api.post("/api/admin/services", serviceForm);
+        await api.post("/admin/services", serviceForm);
         toast.success("Service created");
       }
       setServiceForm({ name: "", priceSmall: 120, priceMedium: 180, priceLarge: 250, priceXL: 350, description: "", isDefault: false });
@@ -125,7 +125,7 @@ export default function AdminPanel() {
   const handleServiceDelete = async (s) => {
     if (!window.confirm(`Delete service tier "${s.name}"?`)) return;
     try {
-      await api.delete(`/api/admin/services/${s._id}`);
+      await api.delete(`/admin/services/${s._id}`);
       toast.success("Service deleted");
       fetchServices();
     } catch (err) {
@@ -137,7 +137,7 @@ export default function AdminPanel() {
   const fetchUsers = useCallback(async () => {
     setUsersLoading(true);
     try {
-      const res = await api.get("/api/admin/users");
+      const res = await api.get("/admin/users");
       setUsers(res.data || []);
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to load users");
@@ -155,7 +155,7 @@ export default function AdminPanel() {
   const handleUserSave = async () => {
     if (!editingUser) return;
     try {
-      await api.patch(`/api/admin/users/${editingUser.id}`, {
+      await api.patch(`/admin/users/${editingUser.id}`, {
         role: editingUserRole,
         hostelBlock: editingUserBlock || undefined,
       });
@@ -170,7 +170,7 @@ export default function AdminPanel() {
   const handleUserDelete = async (u) => {
     if (!window.confirm(`Remove ${u.name} (${u.email})?`)) return;
     try {
-      await api.delete(`/api/admin/users/${u.id}`);
+      await api.delete(`/admin/users/${u.id}`);
       toast.success("User removed");
       fetchUsers();
     } catch (err) {
@@ -181,7 +181,7 @@ export default function AdminPanel() {
   const handleRefund = async (p) => {
     if (!window.confirm(`Refund payment #${String(p._id).slice(-6).toUpperCase()}?`)) return;
     try {
-      await api.post(`/api/payments/${p._id}/refund`);
+      await api.post(`/payments/${p._id}/refund`);
       toast.success("Payment refunded");
       fetchPayments();
     } catch (err) {
@@ -251,7 +251,7 @@ export default function AdminPanel() {
                   { label: "Total batches", value: analytics.totalBatches, icon: "🧺" },
                   { label: "Total revenue", value: `₹${(analytics.totalRevenue || 0).toLocaleString("en-IN")}`, icon: "💰" },
                   { label: "Avg. turnaround", value: `${analytics.avgProcessingHours}h`, icon: "⏱️" },
-                  { label: "Open issues", value: analytics.batchesByStatus ? analytics.issuesByDay?.reduce((a, d) => a + d.count, 0) || 0 : 0, icon: "⚠️" },
+                  { label: "Open issues", value: analytics.openIssues || 0, icon: "⚠️" },
                 ].map((s, i) => (
                   <div key={s.label} className="card p-5 flex items-center justify-between animate-fade-up" style={{ animationDelay: `${i * 0.05}s` }}>
                     <div>

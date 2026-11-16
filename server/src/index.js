@@ -1,70 +1,57 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import authRoutes from "./routes/auth.js";
-import timingsRoutes from "./routes/timings.js";
-import batchesRoutes from "./routes/batches.js";
-import notificationsRoutes from "./routes/notifications.js";
-import demoRoutes from "./routes/demo.js";
-import paymentsRoutes from "./routes/payments.js";
-import reviewsRoutes from "./routes/reviews.js";
-import servicesRoutes from "./routes/services.js";
-import usersRoutes from "./routes/users.js";
-import adminRoutes from "./routes/admin.js";
-import supportRoutes from "./routes/support.js";
+import fs from "node:fs";
+import path from "node:path";
+import mongoose from "mongoose";
+import { config, assertConfig } from "./config.js";
+import { createApp } from "./app.js";
+import { logger } from "./lib/logger.js";
 
-dotenv.config();
+async function boot() {
+  assertConfig();
 
-const app = express();
-const PORT = process.env.PORT || 5000;
-const MOCK_MODE = process.env.MOCK_MODE === "true";
+  if (config.serveClient) {
+    const indexPath = path.join(config.clientDist, "index.html");
+    if (!fs.existsSync(indexPath)) {
+      throw new Error(
+        `SERVE_CLIENT=true but no client build at ${indexPath} — run the client build or set CLIENT_DIST.`
+      );
+    }
+  }
 
-// Warn if JWT_SECRET is still the default placeholder (production risk)
-if (process.env.NODE_ENV === "production" && (!process.env.JWT_SECRET || process.env.JWT_SECRET === "your-secret-key-here")) {
-  console.warn("⚠️  WARNING: JWT_SECRET is not set or is the default placeholder. Set a strong secret in production.");
-}
+  if (config.mockMode) {
+    const { seedDemoData } = await import("./mock/seed.js");
+    await seedDemoData();
+    logger.warn("Running in DEMO MODE (in-memory store) — do not use for real data");
+  } else {
+    await mongoose.connect(process.env.MONGODB_URI);
+    logger.info("Connected to MongoDB");
+  }
 
-app.use(cors());
-app.use(express.json());
-
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/timings", timingsRoutes);
-app.use("/api/batches", batchesRoutes);
-app.use("/api/notifications", notificationsRoutes);
-app.use("/api/demo", demoRoutes);
-app.use("/api/payments", paymentsRoutes);
-app.use("/api/reviews", reviewsRoutes);
-app.use("/api/services", servicesRoutes);
-app.use("/api/users", usersRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/support", supportRoutes);
-
-app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok", mode: MOCK_MODE ? "demo" : "live" });
-});
-
-if (MOCK_MODE) {
-  // Demo mode — no MongoDB needed
-  const { seedDemoData } = await import("./mock/seed.js");
-  await seedDemoData();
-  console.log("🎭 Running in DEMO MODE (in-memory store)");
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  const app = createApp();
+  const server = app.listen(config.port, () => {
+    logger.info(
+      { port: config.port, serveClient: config.serveClient },
+      "Server listening"
+    );
   });
-} else {
-  // Live mode — connect to MongoDB
-  const mongoose = await import("mongoose");
-  mongoose
-    .default.connect(process.env.MONGODB_URI)
-    .then(() => {
-      console.log("Connected to MongoDB");
-      app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-      });
-    })
-    .catch((err) => {
-      console.error("MongoDB connection error:", err);
-      process.exit(1);
+
+  const shutdown = (signal) => {
+    logger.info({ signal }, "Shutting down");
+    server.close(async () => {
+      await mongoose.disconnect().catch(() => {});
+      process.exit(0);
     });
+    // Don't hang forever on a stuck connection.
+    setTimeout(() => process.exit(1), 10000).unref();
+  };
+
+  process.on("SIGINT", () => shutdown("SIGINT"));
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("unhandledRejection", (err) => {
+    logger.error({ err }, "Unhandled rejection");
+  });
 }
+
+boot().catch((err) => {
+  logger.error({ err }, "Failed to start server");
+  process.exit(1);
+});
