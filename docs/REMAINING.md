@@ -18,10 +18,10 @@ This file is the short, honest checklist. The detailed audit is in
 | Dependency audit | No critical/high server advisories; 2 moderate `qs` advisories remain |
 | Production-shaped smoke test | SPA + `/api/health` + JSON 404s verified with `SERVE_CLIENT=true` |
 | Deployment foundation | Dockerfile, Compose, CI workflow, health check, pino logs, indexes, warden seeding |
+| CI | Green on `9ea49ac` (both server and client jobs) |
 
-**Not verified yet:** the real-MongoDB path, Docker image build, the GitHub Actions
-workflow on GitHub, and actual email delivery. Do not mark those as done until
-they have run successfully.
+**Not verified yet:** the real-MongoDB path, Docker image build, and actual
+email delivery. Do not mark those as done until they have run successfully.
 
 ---
 
@@ -34,7 +34,7 @@ they have run successfully.
 - [ ] Verification/reset email delivered (or verification temporarily disabled and documented)
 - [ ] Deployed smoke test passes: login → submit → track → staff advance → invoice
 - [ ] Secrets set in the host, `.env` never committed, demo endpoints unavailable
-- [ ] CI green on the pushed commit
+- [x] CI green on the pushed commit (`9ea49ac`)
 - [ ] README and deployment instructions match the deployed topology
 
 ### Level 2 — production-complete (one hostel, real users)
@@ -105,7 +105,7 @@ The goal is a public demo without running Docker locally.
 - [ ] Real Mongo: verify unique indexes, TTL cleanup, coupon reservation and
       idempotency constraints
 - [ ] Turn off dev-only token responses and demo mode in production
-- [ ] Confirm CI is green on GitHub (the workflow has not run yet)
+- [x] CI verified green on GitHub (run `43846331334`, both jobs passed)
 - [ ] Build the Docker image once on the host, or delete the Docker path if the
       native Render build is chosen
 

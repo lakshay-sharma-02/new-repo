@@ -96,5 +96,5 @@ fields are redacted. `X-Request-Id` is returned on every response.
 - Real-mode API suite against MongoDB and a load test
 - Pagination/query refactor (routes still load collections into memory)
 - Accessibility/Lighthouse pass and client dependency audit
-- Verified Docker/CI runs (the files exist; the image was not built on the
+- Verified Docker image build (CI is green; the image was not built on the
   development machine)

@@ -22,7 +22,7 @@ The product idea, information architecture, role model and UI craft are genuinel
 >
 > **Phase 1 status (16 Nov 2026): complete in the mock/demo runtime.** Server-authoritative pricing and a single checkout endpoint with idempotency; zod validation and central error handling; short-lived access tokens with rotating refresh cookies, revocation, reset and verification flows; role/block scoping; forward-only status machine with actor history and warden override; schedule/ETA enforcement; soft deletion and last-warden guards; support tickets routed to wardens; invoice HTML escaping. `server/test/api.test.js` covers the rules (17 tests) and the client builds, tests and lints clean. **Not yet verified:** the real-Mongo path (no database available here) and actual email delivery (tokens are logged and returned only outside production). Both are Phase 2 work.
 >
-> **Phase 2 status (16 Nov 2026): started.** Added a multi-stage Dockerfile, Compose stack with MongoDB, `SERVE_CLIENT` single-process SPA serving, fail-fast config for client builds/cookies, structured pino logging with redaction, health readiness, DB indexes, a real-DB `seed:warden` script, `VITE_API_BASE_URL`, `.nvmrc`/engines and a GitHub Actions CI workflow. Critical/high server advisories were fixed; two moderate `qs` advisories remain through Express 4. The image and CI workflow have **not been executed** yet. See §14 for the full gap register and the rest of Phase 2.
+> **Phase 2 status (16 Nov 2026): started.** Added a multi-stage Dockerfile, Compose stack with MongoDB, `SERVE_CLIENT` single-process SPA serving, fail-fast config for client builds/cookies, structured pino logging with redaction, health readiness, DB indexes, a real-DB `seed:warden` script, `VITE_API_BASE_URL`, `.nvmrc`/engines and a GitHub Actions CI workflow. Critical/high server advisories were fixed; two moderate `qs` advisories remain through Express 4. CI passed on the first push (run `43846331334`, both jobs); the Docker image has **not** been built yet. See §14 for the full gap register and the rest of Phase 2.
 
 ---
 
@@ -484,7 +484,7 @@ This is the list of things that are **not proven, not automated, or still absent
 | 14 | No 2FA or account lockout | Rate limiting only | Credential stuffing is slowed, not stopped | Phase 3 |
 | 15 | No error tracking or uptime monitor | pino JSON logs with request ids only | Nobody is paged when production breaks | Phase 2 |
 | 16 | No backup/restore drill | Compose volume only | Data-loss recovery is untested | Phase 2 |
-| 17 | Docker/CI not executed | Dockerfile, Compose and workflow were written; no Docker daemon here and CI has not run | Image build, healthcheck and pipeline are unverified | Phase 2 (now) |
+| 17 | Docker image not executed | Dockerfile and Compose were written; no Docker daemon here. CI is green (run `43846331334`) | Image build and healthcheck are unverified | Phase 2 (now) |
 | 18 | Two moderate `qs` advisories remain | Express 4 transitive dependency; critical/high advisories were fixed | Moderate DoS surface until Express ships the fix | Phase 2 |
 | 19 | Client dependency audit not run | Registry audit endpoint failed with a TLS error locally | Unknown client-side advisories | Phase 2 |
 | 20 | No accessibility/Lighthouse pass | No automated a11y checks; React pages only manually reviewed | Keyboard/screen-reader gaps unknown | Phase 2 |
