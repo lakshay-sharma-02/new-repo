@@ -1,3 +1,18 @@
+# INT335: Design Thinking — Continuous Assessment 2 (CA2) Final Project Report
+
+## Laundry Roulette 🧺 — Hostel Laundry Tracking & Accountability System
+**Course:** INT335: Design Thinking | **Academic Session:** 2026–27 | **Section:** K2P25QH  
+**Mentor:** Akash Bhattacharjee, Assistant Professor  
+**Team No:** 05 | **Project ID:** P21  
+
+### Team Roster & Role Assignments
+- **Aditya Singh Chauhan** (Reg. No: 12509555, Roll No: 42) — **Team Lead** (Project governance, checkpoints, problem framing, conclusions)
+- **Prosad Das** (Reg. No: 12530574, Roll No: 54) — **Research & Design Lead** (Field empathy research, AEIOU observations, personas, journey mapping, POV/HMW)
+- **Lakshay Sharma** (Reg. No: 12514768, Roll No: 10) — **Prototype Lead** (Ideation log, screening matrix, full-stack React+Express prototype, usability testing, iterations)
+- **Ayush Ranjan** (Reg. No: 12527161, Roll No: 24) — **Documentation Lead** (Evidence curation, survey analytics, impact modeling, limitations, roadmap)
+
+---
+
 # Final Report — Laundry Roulette
 
 ## A Hostel Laundry Tracking & Accountability System
