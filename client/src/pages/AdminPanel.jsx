@@ -529,7 +529,7 @@ export default function AdminPanel() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-semibold text-slate-900">{u.name || "(no name)"}</span>
                           <span className={`badge text-[10px] py-0.5 ${
-                            u.role === "warden" ? "bg-fuchsia-400/10 border-indigo-300 text-indigo-700" :
+                            u.role === "warden" ? "bg-indigo-400/10 border-indigo-300 text-indigo-700" :
                             u.role === "staff" ? "bg-accent-400/10 border-accent-400/25 text-accent-600" :
                             "bg-cyan-400/10 border-cyan-400/25 text-cyan-700"
                           }`}>{u.role}</span>
