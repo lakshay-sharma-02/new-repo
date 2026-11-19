@@ -19,12 +19,12 @@ function StarRow({ rating, setRating, interactive = true, className = "" }) {
             className="cursor-pointer transition-transform hover:scale-110"
             style={{ transform: rating >= s ? "scale(1.15)" : "scale(1)" }}
           >
-            <span className="text-xl" style={{ color: rating >= s ? "#fbbf24" : "#4a5060" }}>
+            <span className="text-xl" style={{ color: rating >= s ? "#b45309" : "#64748b" }}>
               ★
             </span>
           </button>
         ) : (
-          <span key={s} aria-hidden="true" className="text-xl leading-none" style={{ color: rating >= s ? "#fbbf24" : "#4a5060" }}>
+          <span key={s} aria-hidden="true" className="text-xl leading-none" style={{ color: rating >= s ? "#b45309" : "#64748b" }}>
             ★
           </span>
         )
@@ -126,12 +126,12 @@ export default function Reviews() {
       {/* Review form */}
       {showForm && (
         <div className="card p-6 mb-10 animate-fade-up" style={{ animationDelay: "0.04s" }}>
-          <h2 className="text-lg font-semibold text-white mb-4">Write a review</h2>
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">Write a review</h2>
 
           <form onSubmit={handleSubmitReview} className="space-y-5">
             {/* Batch link */}
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Link to a completed batch (optional)</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">Link to a completed batch (optional)</label>
               <select
                 value={selectedBatch}
                 onChange={(e) => setSelectedBatch(e.target.value)}
@@ -139,7 +139,7 @@ export default function Reviews() {
               >
                 <option value="">Leave unlinked</option>
                 {usableBatches.map((b) => (
-                  <option key={b._id} value={b._id} className="bg-[#0b0d15]">
+                  <option key={b._id} value={b._id} className="bg-white">
                     #{String(b._id).slice(-5).toUpperCase()} — {b.description}
                   </option>
                 ))}
@@ -148,14 +148,14 @@ export default function Reviews() {
 
             {/* Star rating */}
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Your rating</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">Your rating</label>
               <StarRow rating={rating} setRating={setRating} />
-              <p className="text-[11px] text-[#5d6577] mt-1.5">{rating} of 5 stars</p>
+              <p className="text-[11px] text-[#64748b] mt-1.5">{rating} of 5 stars</p>
             </div>
 
             {/* Comment */}
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Comment</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">Comment</label>
               <textarea
                 required
                 rows={4}
@@ -164,7 +164,7 @@ export default function Reviews() {
                 className="field resize-none leading-relaxed"
                 placeholder="What went well? What could be better?"
               />
-              <p className="text-[11px] text-[#5d6577] mt-2">
+              <p className="text-[11px] text-[#64748b] mt-2">
                 Posts anonymously — your name shows as a shortened version.
               </p>
             </div>
@@ -187,7 +187,7 @@ export default function Reviews() {
       {!canReview && !showForm && (
         <div className="card p-6 mb-10 text-center animate-fade-up" style={{ animationDelay: "0.04s" }}>
           <p className="text-2xl mb-3">💬</p>
-          <p className="text-sm text-[#8b93a7] font-medium">
+          <p className="text-sm text-[#475569] font-medium">
             {user ? "Only students with completed batches can write reviews." : "Log in to write a review."}
           </p>
         </div>
@@ -198,30 +198,30 @@ export default function Reviews() {
         <div className="grid sm:grid-cols-2 gap-6 mb-10">
           {/* Average rating */}
           <div className="card p-7 text-center animate-fade-up" style={{ animationDelay: "0.08s" }}>
-            <div className="text-5xl font-bold text-white mb-2">{data.average.toFixed(1)}</div>
+            <div className="text-5xl font-bold text-slate-900 mb-2">{data.average.toFixed(1)}</div>
             <StarRow rating={Math.round(data.average)} setRating={() => {}} interactive={false} className="justify-center" />
-            <p className="text-xs text-[#5d6577] mt-3">{data.total} review{data.total !== 1 ? "s" : ""}</p>
+            <p className="text-xs text-[#64748b] mt-3">{data.total} review{data.total !== 1 ? "s" : ""}</p>
           </div>
 
           {/* Star breakdown */}
           <div className="card p-7 animate-fade-up" style={{ animationDelay: "0.1s" }}>
-            <h3 className="text-sm font-semibold text-white mb-4">Rating breakdown</h3>
+            <h3 className="text-sm font-semibold text-slate-900 mb-4">Rating breakdown</h3>
             {STARS.map((star) => {
               const count = (data.breakdown || {})[star] || 0;
               const pct = data.total > 0 ? (count / data.total) * 100 : 0;
               return (
                 <div key={star} className="flex items-center gap-3 mb-2.5">
-                  <span className="text-xs font-medium text-[#b9c0d0] w-8">{star}★</span>
-                  <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                  <span className="text-xs font-medium text-[#475569] w-8">{star}★</span>
+                  <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: "rgba(15,23,42,0.06)" }}>
                     <div
                       className="h-full rounded-full transition-all"
                       style={{
                         width: `${pct}%`,
-                        background: star >= 4 ? "linear-gradient(90deg,#fbbf24,#f59e0b)" : "rgba(129,140,248,0.5)",
+                        background: star >= 4 ? "linear-gradient(90deg,#b45309,#f59e0b)" : "rgba(59,130,246,0.5)",
                       }}
                     />
                   </div>
-                  <span className="text-xs text-[#5d6577] w-10 text-right">{count}</span>
+                  <span className="text-xs text-[#64748b] w-10 text-right">{count}</span>
                 </div>
               );
             })}
@@ -234,7 +234,7 @@ export default function Reviews() {
         {data.reviews.length === 0 ? (
           <div className="card p-14 text-center animate-scale-in">
             <p className="text-5xl mb-4 opacity-80">📭</p>
-            <p className="text-lg font-semibold text-white">No reviews yet</p>
+            <p className="text-lg font-semibold text-slate-900">No reviews yet</p>
             <p className="muted text-sm mt-1.5">Be the first to share your experience!</p>
           </div>
         ) : (
@@ -245,21 +245,21 @@ export default function Reviews() {
               style={{ animationDelay: `${Math.min(i, 6) * 0.05}s` }}
             >
               <div className="flex items-start gap-4">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-accent-500 to-fuchsia-500 flex items-center justify-center text-base shrink-0">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-accent-500 to-sky-500 flex items-center justify-center text-base shrink-0">
                   {(r.anonymousName || "G").charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2.5 flex-wrap mb-1.5">
-                    <span className="font-semibold text-white text-sm">{r.anonymousName || "Anonymous"}</span>
+                    <span className="font-semibold text-slate-900 text-sm">{r.anonymousName || "Anonymous"}</span>
                     <StarRow rating={r.rating} setRating={() => {}} interactive={false} />
-                    <span className="text-[10px] text-[#5d6577] font-mono">
+                    <span className="text-[10px] text-[#64748b] font-mono">
                       {new Date(r.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                     </span>
                   </div>
                   {r.comment && (
-                    <p className="text-sm text-[#b9c0d0] leading-relaxed">{r.comment}</p>
+                    <p className="text-sm text-[#475569] leading-relaxed">{r.comment}</p>
                   )}
-                  {!r.comment && <p className="text-xs text-[#5d6577]">No written feedback</p>}
+                  {!r.comment && <p className="text-xs text-[#64748b]">No written feedback</p>}
                 </div>
               </div>
             </div>

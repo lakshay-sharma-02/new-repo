@@ -6,10 +6,10 @@ import { useAuth } from "../context/AuthContext";
 import PageHeader from "../components/PageHeader";
 
 const STATUS_BADGE = {
-  success: { cls: "bg-emerald-400/10 border-emerald-400/25 text-emerald-300", icon: "✅" },
-  pending: { cls: "bg-amber-400/10 border-amber-400/25 text-amber-300", icon: "⏳" },
-  failed: { cls: "bg-rose-400/10 border-rose-400/25 text-rose-300", icon: "✕" },
-  refunded: { cls: "bg-slate-400/10 border-slate-400/25 text-slate-400", icon: "↩" },
+  success: { cls: "bg-emerald-400/10 border-emerald-400/25 text-emerald-700", icon: "✅" },
+  pending: { cls: "bg-amber-400/10 border-amber-400/25 text-amber-700", icon: "⏳" },
+  failed: { cls: "bg-rose-400/10 border-rose-400/25 text-rose-700", icon: "✕" },
+  refunded: { cls: "bg-slate-400/10 border-slate-400/25 text-slate-600", icon: "↩" },
 };
 
 const METHOD_ICON = {
@@ -71,22 +71,22 @@ export default function Payments() {
       <div className="grid sm:grid-cols-3 gap-4 mb-8">
         <div className="card card-hover p-5 flex items-center justify-between animate-fade-up" style={{ animationDelay: "0.05s" }}>
           <div>
-            <p className="text-xs text-[#8b93a7] font-medium uppercase tracking-wider">Total paid</p>
-            <p className="text-2xl font-bold text-white mt-1.5">₹{totalSpent.toLocaleString("en-IN")}</p>
+            <p className="text-xs text-[#475569] font-medium uppercase tracking-wider">Total paid</p>
+            <p className="text-2xl font-bold text-slate-900 mt-1.5">₹{totalSpent.toLocaleString("en-IN")}</p>
           </div>
           <span className="text-2xl">💰</span>
         </div>
         <div className="card card-hover p-5 flex items-center justify-between animate-fade-up" style={{ animationDelay: "0.08s" }}>
           <div>
-            <p className="text-xs text-[#8b93a7] font-medium uppercase tracking-wider">Transactions</p>
-            <p className="text-2xl font-bold text-white mt-1.5">{payments.length}</p>
+            <p className="text-xs text-[#475569] font-medium uppercase tracking-wider">Transactions</p>
+            <p className="text-2xl font-bold text-slate-900 mt-1.5">{payments.length}</p>
           </div>
           <span className="text-2xl">📊</span>
         </div>
         <div className="card card-hover p-5 flex items-center justify-between animate-fade-up" style={{ animationDelay: "0.11s" }}>
           <div>
-            <p className="text-xs text-[#8b93a7] font-medium uppercase tracking-wider">Pending</p>
-            <p className="text-2xl font-bold text-white mt-1.5">{pendingCount}</p>
+            <p className="text-xs text-[#475569] font-medium uppercase tracking-wider">Pending</p>
+            <p className="text-2xl font-bold text-slate-900 mt-1.5">{pendingCount}</p>
           </div>
           <span className="text-2xl">⏱️</span>
         </div>
@@ -96,7 +96,7 @@ export default function Payments() {
       {payments.length === 0 ? (
         <div className="card p-14 text-center animate-scale-in">
           <p className="text-5xl mb-4 opacity-80">💳</p>
-          <p className="text-lg font-semibold text-white">No payments yet</p>
+          <p className="text-lg font-semibold text-slate-900">No payments yet</p>
           <p className="muted text-sm mt-1.5 mb-6">Submit a laundry batch and we'll generate your first invoice.</p>
           <Link to="/submit" className="btn-primary inline-flex">Submit a batch</Link>
         </div>
@@ -114,27 +114,27 @@ export default function Payments() {
                 <div className="flex items-center justify-between gap-4 mb-4">
                   <div className="flex items-center gap-3">
                     <span className={`badge ${sb.cls}`}>{sb.icon} {p.status.replace("_", " ")}</span>
-                    <span className="font-mono text-xs text-[#5d6577]">#{String(p._id).slice(-6).toUpperCase()}</span>
+                    <span className="font-mono text-xs text-[#64748b]">#{String(p._id).slice(-6).toUpperCase()}</span>
                   </div>
                   <span className="text-right">
-                    <p className="text-lg font-bold text-white">₹{(p.amount || 0).toLocaleString("en-IN")}</p>
-                    <p className="text-[10px] text-[#5d6577]">{new Date(p.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</p>
+                    <p className="text-lg font-bold text-slate-900">₹{(p.amount || 0).toLocaleString("en-IN")}</p>
+                    <p className="text-[10px] text-[#64748b]">{new Date(p.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</p>
                   </span>
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm min-w-0">
-                    <span className="flex items-center gap-1.5 text-xs text-[#8b93a7]">
+                    <span className="flex items-center gap-1.5 text-xs text-[#475569]">
                       {METHOD_ICON[p.method] || "💳"} {p.method || "upi"}
                     </span>
                     {p.batchInfo && (
-                      <span className="text-xs text-[#5d6577] truncate max-w-[180px]">• {p.batchInfo.description}</span>
+                      <span className="text-xs text-[#64748b] truncate max-w-[180px]">• {p.batchInfo.description}</span>
                     )}
                     {p.transactionRef && (
-                      <span className="hidden sm:inline font-mono text-[10px] text-[#5d6577]">ref: {p.transactionRef}</span>
+                      <span className="hidden sm:inline font-mono text-[10px] text-[#64748b]">ref: {p.transactionRef}</span>
                     )}
                   </div>
-                  <span className="text-xs font-medium text-accent-300 shrink-0">View invoice →</span>
+                  <span className="text-xs font-medium text-accent-600 shrink-0">View invoice →</span>
                 </div>
               </Link>
             );

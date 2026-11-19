@@ -27,25 +27,25 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative">
-      <Link to="/login" className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs font-medium text-[#8b93a7] hover:text-white transition-colors">
+      <Link to="/login" className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs font-medium text-[#475569] hover:text-slate-900 transition-colors">
         ← Back to sign in
       </Link>
       <div className="w-full max-w-md animate-fade-up">
         <div className="text-center mb-9">
-          <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-500 to-fuchsia-500 items-center justify-center text-3xl mb-5 shadow-2xl shadow-accent-600/40">
+          <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-500 to-sky-500 items-center justify-center text-3xl mb-5 shadow-2xl shadow-accent-600/40">
             🔑
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Reset your password</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Reset your password</h1>
           <p className="muted text-sm mt-1.5">
             We&apos;ll email you a link to choose a new one
           </p>
         </div>
 
-        <div className="card p-7 sm:p-8 shadow-2xl shadow-black/40">
+        <div className="card p-7 sm:p-8 shadow-2xl shadow-slate-900/10">
           {sent ? (
             <div className="space-y-4 text-center">
-              <p className="text-sm text-[#b9c0d0]">
-                If <span className="text-white">{email}</span> is registered, a reset link has
+              <p className="text-sm text-[#475569]">
+                If <span className="text-slate-900">{email}</span> is registered, a reset link has
                 been sent.
               </p>
               {resetToken && (
@@ -56,14 +56,14 @@ export default function ForgotPassword() {
                   Continue to reset (dev)
                 </Link>
               )}
-              <Link to="/login" className="block text-xs text-accent-300 hover:text-white">
+              <Link to="/login" className="block text-xs text-accent-600 hover:text-slate-900">
                 Back to sign in
               </Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Email</label>
+                <label className="block text-sm font-medium text-[#475569] mb-2">Email</label>
                 <input
                   type="email"
                   required
@@ -83,7 +83,7 @@ export default function ForgotPassword() {
 
         <p className="text-center text-sm muted mt-7">
           Remembered it?{" "}
-          <Link to="/login" className="text-accent-300 hover:text-white font-medium">
+          <Link to="/login" className="text-accent-600 hover:text-slate-900 font-medium">
             Sign in
           </Link>
         </p>

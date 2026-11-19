@@ -22,7 +22,7 @@ function MiniTracker({ stage }) {
     <div className="flex items-center gap-1">
       {STAGES.map((s, i) => (
         <div key={s.key} className="flex-1 h-1.5 rounded-full relative overflow-hidden"
-          style={{ background: i <= idx ? "linear-gradient(90deg,#6366f1,#a855f7)" : "rgba(255,255,255,0.09)" }}>
+          style={{ background: i <= idx ? "linear-gradient(90deg,#2563eb,#0ea5e9)" : "rgba(15,23,42,0.08)" }}>
           {i === idx && <div className="absolute inset-0 bg-white/25 animate-glow" />}
         </div>
       ))}
@@ -50,7 +50,7 @@ function HeroMockup() {
 
       {/* Device frame */}
       <div className="relative card p-2 shadow-2xl shadow-accent-600/20">
-        <div className="rounded-2xl overflow-hidden bg-[#0a0c14]/90 border border-white/5 p-5">
+        <div className="rounded-2xl overflow-hidden bg-white border border-slate-900/10 p-5">
           {/* window dots */}
           <div className="flex items-center gap-1.5 mb-5 px-1">
             <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]/80" />
@@ -62,11 +62,11 @@ function HeroMockup() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <span className="text-lg">🧺</span>
-              <span className="text-sm font-bold text-white/90">Laundry Roulette</span>
+              <span className="text-sm font-bold text-slate-800">Laundry Roulette</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-400 to-fuchsia-500 flex items-center justify-center text-[10px] font-bold text-white">A</div>
-              <div className="w-6 h-6 rounded-full bg-[#22d3ee]/15 border border-cyan-400/30 flex items-center justify-center text-[10px] animate-pulse-ring">▶</div>
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-400 to-sky-500 flex items-center justify-center text-[10px] font-bold text-white">A</div>
+              <div className="w-6 h-6 rounded-full bg-[#0891b2]/15 border border-cyan-400/30 flex items-center justify-center text-[10px] animate-pulse-ring">▶</div>
             </div>
           </div>
 
@@ -74,24 +74,24 @@ function HeroMockup() {
           <div className="card p-4 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <span className="badge bg-accent-500/15 text-accent-300 border border-accent-500/25">
+                <span className="badge bg-accent-500/15 text-accent-600 border border-accent-500/25">
                   {current.icon} {current.label}
                 </span>
-                <span className="badge bg-white/5 text-[#8b93a7] border border-white/10">B6 · Mon batch</span>
+                <span className="badge bg-slate-900/5 text-[#475569] border border-slate-900/10">B6 · Mon batch</span>
               </div>
-              <span className="text-xs text-[#5d6577] font-medium">now</span>
+              <span className="text-xs text-[#64748b] font-medium">now</span>
             </div>
 
             <MiniTracker stage={current.key} />
 
             <div className="flex items-center justify-between pt-1">
               <div>
-                <p className="text-xs text-[#5d6577]">Estimated ready</p>
-                <p className="text-sm font-semibold text-white/85">Wed · 4:00 PM</p>
+                <p className="text-xs text-[#64748b]">Estimated ready</p>
+                <p className="text-sm font-semibold text-slate-700">Wed · 4:00 PM</p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-[#5d6577]">Items</p>
-                <p className="text-sm font-semibold text-white/85">2 shirts, 3 tees</p>
+                <p className="text-xs text-[#64748b]">Items</p>
+                <p className="text-sm font-semibold text-slate-700">2 shirts, 3 tees</p>
               </div>
             </div>
           </div>
@@ -101,14 +101,14 @@ function HeroMockup() {
             <div className="flex gap-8 whitespace-nowrap animate-ticker" style={{ width: "max-content" }}>
               {[0, 1].map((k) => (
                 <div key={k} className="flex items-center gap-3">
-                  <span className="flex items-center gap-1.5 text-[11px] text-emerald-300/90">
+                  <span className="flex items-center gap-1.5 text-[11px] text-emerald-700/90">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-glow" />
                     Batch #A-104 → {current.label}
                   </span>
-                  <span className="flex items-center gap-1.5 text-[11px] text-[#8b93a7]">
+                  <span className="flex items-center gap-1.5 text-[11px] text-[#475569]">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent-400" /> Batch #A-103 → drying
                   </span>
-                  <span className="flex items-center gap-1.5 text-[11px] text-[#8b93a7]">
+                  <span className="flex items-center gap-1.5 text-[11px] text-[#475569]">
                     <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" /> Batch #A-102 → ready
                   </span>
                 </div>
@@ -174,7 +174,7 @@ const STEPS = [
 
 function FeatureIcon({ children }) {
   return (
-    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500/20 to-fuchsia-500/20 border border-accent-400/20 flex items-center justify-center text-2xl">
+    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent-500/20 to-sky-500/20 border border-accent-400/20 flex items-center justify-center text-2xl">
       {children}
     </div>
   );
@@ -213,7 +213,7 @@ export default function Landing() {
   return (
     <div className="relative">
       {/* ======= NAV ======= */}
-      <header className="sticky top-0 z-50 glass-nav border-b border-white/5">
+      <header className="sticky top-0 z-50 glass-nav border-b border-slate-900/10">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <span className="text-2xl">🧺</span>
@@ -221,9 +221,9 @@ export default function Landing() {
               Laundry<span className="grad-text">Roulette</span>
             </span>
           </div>
-          <nav className="hidden md:flex items-center gap-8 text-sm text-[#8b93a7]">
-            <button onClick={() => scrollTo(howRef)} className="hover:text-white transition-colors cursor-pointer">How it works</button>
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
+          <nav className="hidden md:flex items-center gap-8 text-sm text-[#475569]">
+            <button onClick={() => scrollTo(howRef)} className="hover:text-slate-900 transition-colors cursor-pointer">How it works</button>
+            <a href="#features" className="hover:text-slate-900 transition-colors">Features</a>
           </nav>
           <div className="flex items-center gap-3">
             <Link to="/login" className="btn-ghost py-2 px-4 hidden sm:inline-flex">Sign in</Link>
@@ -239,12 +239,12 @@ export default function Landing() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           {/* Left copy */}
           <div className="animate-fade-up">
-            <div className="inline-flex items-center gap-2 badge bg-white/5 border border-white/10 text-[#a7b0c2] mb-7 px-3 py-1.5 text-xs">
+            <div className="inline-flex items-center gap-2 badge bg-slate-900/5 border border-slate-900/10 text-[#475569] mb-7 px-3 py-1.5 text-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-glow" />
               Final-year capstone · working live demo
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05] text-white">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.05] text-slate-900">
               Never wonder
               <br />
               <span className="grad-text">where your laundry</span>
@@ -252,9 +252,9 @@ export default function Landing() {
               is again.
             </h1>
 
-            <p className="mt-6 text-lg text-[#8b93a7] max-w-md leading-relaxed">
+            <p className="mt-6 text-lg text-[#475569] max-w-md leading-relaxed">
               Hostel laundry is a black hole — drop it off, cross your fingers, go check three times.
-              <span className="text-white/80"> Laundry Roulette turns it into a live tracker.</span>
+              <span className="text-slate-700"> Laundry Roulette turns it into a live tracker.</span>
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-4">
@@ -277,8 +277,8 @@ export default function Landing() {
                 ["100%", "hostel-agnostic"],
               ].map(([v, l]) => (
                 <div key={l}>
-                  <p className="text-2xl font-bold text-white">{v}</p>
-                  <p className="text-[11px] text-[#5d6577] mt-0.5 leading-snug">{l}</p>
+                  <p className="text-2xl font-bold text-slate-900">{v}</p>
+                  <p className="text-[11px] text-[#64748b] mt-0.5 leading-snug">{l}</p>
                 </div>
               ))}
             </div>
@@ -294,21 +294,21 @@ export default function Landing() {
       {/* ======= HOW IT WORKS ======= */}
       <section ref={howRef} className="max-w-6xl mx-auto px-6 py-20 scroll-mt-20">
         <div className="text-center mb-16">
-          <p className="text-xs font-semibold tracking-[0.2em] text-accent-300 uppercase mb-3">How it works</p>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">From drop-off to pickup, in the open</h2>
+          <p className="text-xs font-semibold tracking-[0.2em] text-accent-600 uppercase mb-3">How it works</p>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">From drop-off to pickup, in the open</h2>
           <p className="muted mt-3 max-w-xl mx-auto">Three steps. That's the entire product — everything else is polish.</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {STEPS.map((s, i) => (
             <div key={s.n} className="card card-hover p-7 relative overflow-hidden animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
-              <div className="absolute -top-8 -right-4 text-[110px] font-extrabold leading-none text-white/[0.035] select-none">{s.n}</div>
+              <div className="absolute -top-8 -right-4 text-[110px] font-extrabold leading-none text-slate-900/[0.06] select-none">{s.n}</div>
               <div className="relative">
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-accent-500 to-fuchsia-500 flex items-center justify-center font-bold text-white mb-5 shadow-lg shadow-accent-600/30">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-accent-500 to-sky-500 flex items-center justify-center font-bold text-white mb-5 shadow-lg shadow-accent-600/30">
                   {s.n}
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{s.title}</h3>
-                <p className="text-sm text-[#8b93a7] leading-relaxed">{s.desc}</p>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">{s.title}</h3>
+                <p className="text-sm text-[#475569] leading-relaxed">{s.desc}</p>
               </div>
             </div>
           ))}
@@ -318,8 +318,8 @@ export default function Landing() {
       {/* ======= FEATURES ======= */}
       <section id="features" className="max-w-6xl mx-auto px-6 py-20 scroll-mt-16">
         <div className="text-center mb-16">
-          <p className="text-xs font-semibold tracking-[0.2em] text-accent-300 uppercase mb-3">Features</p>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">Built for the messiest part of hostel life</h2>
+          <p className="text-xs font-semibold tracking-[0.2em] text-accent-600 uppercase mb-3">Features</p>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">Built for the messiest part of hostel life</h2>
           <p className="muted mt-3 max-w-xl mx-auto">Every feature maps to a real failure point we found by watching actual laundry cycles.</p>
         </div>
 
@@ -327,8 +327,8 @@ export default function Landing() {
           {FEATURES.map((f, i) => (
             <div key={f.title} className="card card-hover p-6 animate-fade-up" style={{ animationDelay: `${i * 0.06}s` }}>
               <FeatureIcon>{f.icon}</FeatureIcon>
-              <h3 className="mt-4 font-semibold text-white">{f.title}</h3>
-              <p className="mt-2 text-sm text-[#8b93a7] leading-relaxed">{f.desc}</p>
+              <h3 className="mt-4 font-semibold text-slate-900">{f.title}</h3>
+              <p className="mt-2 text-sm text-[#475569] leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>
@@ -339,7 +339,7 @@ export default function Landing() {
         <div className="card relative overflow-hidden p-10 sm:p-14 text-center">
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-accent-600/25 blur-3xl rounded-full pointer-events-none" />
           <div className="relative">
-            <p className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            <p className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Stop guessing. <span className="grad-text">Start tracking.</span>
             </p>
             <p className="muted mt-3 max-w-md mx-auto">
@@ -351,7 +351,7 @@ export default function Landing() {
               </button>
               <Link to="/register" className="btn-ghost px-7 py-3">Create account</Link>
             </div>
-            <p className="mt-5 text-xs text-[#5d6577] font-mono leading-relaxed">
+            <p className="mt-5 text-xs text-[#64748b] font-mono leading-relaxed">
               demo logins → aarav@hostel.edu / demo123 (student)<br />
               ramesh@hostel.edu / demo123 (staff ops console)
             </p>
@@ -360,12 +360,12 @@ export default function Landing() {
       </section>
 
       {/* ======= FOOTER ======= */}
-      <footer className="border-t border-white/5 py-10">
+      <footer className="border-t border-slate-900/10 py-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-sm text-[#8b93a7]">
+          <div className="flex items-center gap-2 text-sm text-[#475569]">
             <span className="text-lg">🧺</span> Laundry Roulette
           </div>
-          <p className="text-xs text-[#5d6577]">Built as a final-year capstone · React + Express</p>
+          <p className="text-xs text-[#64748b]">Built as a final-year capstone · React + Express</p>
         </div>
       </footer>
     </div>

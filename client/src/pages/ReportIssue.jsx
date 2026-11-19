@@ -41,7 +41,7 @@ export default function ReportIssue() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
       <Link to={`/track/${id}`}
-        className="inline-flex items-center gap-1.5 text-sm text-[#8b93a7] hover:text-white transition-colors mb-6 font-medium">
+        className="inline-flex items-center gap-1.5 text-sm text-[#475569] hover:text-slate-900 transition-colors mb-6 font-medium">
         ← Back to batch
       </Link>
 
@@ -54,7 +54,7 @@ export default function ReportIssue() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="rounded-xl px-4 py-3 text-sm text-rose-200 border animate-scale-in"
+          <div className="rounded-xl px-4 py-3 text-sm text-rose-700 border animate-scale-in"
             style={{ background: "rgba(251,113,133,0.08)", borderColor: "rgba(251,113,133,0.25)" }}>
             ⚠️ {error}
           </div>
@@ -62,11 +62,11 @@ export default function ReportIssue() {
 
         {/* Quick chips */}
         <div className="animate-fade-up" style={{ animationDelay: "0.04s" }}>
-          <p className="text-[11px] uppercase tracking-wider text-[#5d6577] font-semibold mb-2.5">Common issues</p>
+          <p className="text-[11px] uppercase tracking-wider text-[#64748b] font-semibold mb-2.5">Common issues</p>
           <div className="flex flex-wrap gap-2">
             {QUICK.map((q) => (
               <button key={q} type="button" onClick={() => setIssueDescription(q)}
-                className="px-3.5 py-2 rounded-full text-xs font-medium border border-white/10 bg-white/[0.04] text-[#b9c0d0] hover:border-rose-400/40 hover:text-white transition-all cursor-pointer">
+                className="px-3.5 py-2 rounded-full text-xs font-medium border border-slate-900/10 bg-slate-900/[0.04] text-[#475569] hover:border-rose-400/40 hover:text-slate-900 transition-all cursor-pointer">
                 {q}
               </button>
             ))}
@@ -74,7 +74,7 @@ export default function ReportIssue() {
         </div>
 
         <div className="card p-6 animate-fade-up" style={{ animationDelay: "0.08s" }}>
-          <label className="block text-sm font-medium text-[#b9c0d0] mb-3">📝 What went wrong?</label>
+          <label className="block text-sm font-medium text-[#475569] mb-3">📝 What went wrong?</label>
           <textarea
             required
             rows={5}
@@ -83,13 +83,13 @@ export default function ReportIssue() {
             className="field resize-none leading-relaxed"
             placeholder="Describe the item, what happened, and any details that help us investigate…"
           />
-          <p className="text-xs text-[#5d6577] mt-2">
+          <p className="text-xs text-[#64748b] mt-2">
             Be specific — item type, color, and what condition it was in when you dropped it off.
           </p>
         </div>
 
         <button type="submit" disabled={loading}
-          className="w-full py-3.5 text-[15px] font-semibold rounded-xl text-white transition-all disabled:opacity-50 cursor-pointer"
+          className="w-full py-3.5 text-[15px] font-semibold rounded-xl text-slate-900 transition-all disabled:opacity-50 cursor-pointer"
           style={{ background: "linear-gradient(135deg,#e11d48,#f43f5e)", boxShadow: "0 10px 30px -10px rgba(225,29,72,0.5)" }}>
           {loading ? (
             <span className="flex items-center justify-center gap-2">

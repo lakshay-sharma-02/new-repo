@@ -31,50 +31,50 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative">
-      <Link to="/" className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs font-medium text-[#8b93a7] hover:text-white transition-colors">
+      <Link to="/" className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs font-medium text-[#475569] hover:text-slate-900 transition-colors">
         ← Back to home
       </Link>
       <div className="w-full max-w-md animate-fade-up">
         {/* Logo */}
         <div className="text-center mb-9">
-          <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-500 to-fuchsia-500 items-center justify-center text-3xl mb-5 shadow-2xl shadow-accent-600/40">
+          <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-500 to-sky-500 items-center justify-center text-3xl mb-5 shadow-2xl shadow-accent-600/40">
             🧺
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Create your account</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Create your account</h1>
           <p className="muted text-sm mt-1.5">Start tracking in under a minute</p>
         </div>
 
         {/* Card */}
-        <div className="card p-7 sm:p-8 shadow-2xl shadow-black/40">
+        <div className="card p-7 sm:p-8 shadow-2xl shadow-slate-900/10">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
-              <div className="rounded-xl px-4 py-3 text-sm text-rose-200 flex items-center gap-2.5 animate-scale-in border"
+              <div className="rounded-xl px-4 py-3 text-sm text-rose-700 flex items-center gap-2.5 animate-scale-in border"
                 style={{ background: "rgba(251,113,133,0.08)", borderColor: "rgba(251,113,133,0.25)" }}>
                 <span>⚠️</span> {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Full name</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">Full name</label>
               <input type="text" required value={name} onChange={(e) => setName(e.target.value)}
                 className="field" placeholder="Your name" autoComplete="name" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Email</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">Email</label>
               <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
                 className="field" placeholder="you@hostel.edu" autoComplete="email" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Password</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">Password</label>
               <input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)}
                 className="field" placeholder="8+ characters, letters & numbers" autoComplete="new-password" />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">
-                Hostel block <span className="text-[#5d6577] font-normal">(optional)</span>
+              <label className="block text-sm font-medium text-[#475569] mb-2">
+                Hostel block <span className="text-[#64748b] font-normal">(optional)</span>
               </label>
               <input type="text" value={hostelBlock} onChange={(e) => setHostelBlock(e.target.value)}
                 className="field" placeholder="e.g. B6, Block C" />
@@ -93,7 +93,7 @@ export default function Register() {
 
         <p className="text-center text-sm muted mt-7">
           Already have an account?{" "}
-          <Link to="/login" className="text-accent-300 hover:text-white font-medium transition-colors">Sign in</Link>
+          <Link to="/login" className="text-accent-600 hover:text-slate-900 font-medium transition-colors">Sign in</Link>
         </p>
       </div>
     </div>

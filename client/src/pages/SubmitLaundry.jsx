@@ -133,7 +133,7 @@ export default function SubmitLaundry() {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
         <div className="card p-10 text-center animate-scale-in">
           <p className="text-4xl mb-4">🗓️</p>
-          <p className="text-lg font-semibold text-white">No schedule published yet</p>
+          <p className="text-lg font-semibold text-slate-900">No schedule published yet</p>
           <p className="muted text-sm mt-1.5 max-w-sm mx-auto">
             The laundry service for your block hasn't published its drop-off days yet.
             Once they do, this page unlocks and submitting takes under a minute.
@@ -154,7 +154,7 @@ export default function SubmitLaundry() {
 
       <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
         {error && (
-          <div className="rounded-xl px-4 py-3 text-sm text-rose-200 border animate-scale-in"
+          <div className="rounded-xl px-4 py-3 text-sm text-rose-700 border animate-scale-in"
             style={{ background: "rgba(251,113,133,0.08)", borderColor: "rgba(251,113,133,0.25)" }}>
             ⚠️ {error}
           </div>
@@ -162,7 +162,7 @@ export default function SubmitLaundry() {
 
         {/* Schedule summary */}
         <div className="card p-5 animate-fade-up" style={{ animationDelay: "0.04s" }}>
-          <p className="text-[11px] uppercase tracking-wider text-[#5d6577] font-semibold mb-3">Your block schedule</p>
+          <p className="text-[11px] uppercase tracking-wider text-[#64748b] font-semibold mb-3">Your block schedule</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
             {[
               ["Days", timings.laundryDays.join(" ")],
@@ -170,9 +170,9 @@ export default function SubmitLaundry() {
               ["Pickup", `${timings.pickupStart}–${timings.pickupEnd}`],
               ["ETA", `~${timings.turnaroundDays}d`],
             ].map(([l, v]) => (
-              <div key={l} className="rounded-xl bg-white/[0.03] border border-white/[0.06] px-2 py-2.5">
-                <p className="text-[10px] text-[#5d6577] uppercase tracking-wider font-semibold">{l}</p>
-                <p className="text-xs font-bold text-white mt-1">{v}</p>
+              <div key={l} className="rounded-xl bg-slate-900/[0.03] border border-slate-900/10 px-2 py-2.5">
+                <p className="text-[10px] text-[#64748b] uppercase tracking-wider font-semibold">{l}</p>
+                <p className="text-xs font-bold text-slate-900 mt-1">{v}</p>
               </div>
             ))}
           </div>
@@ -181,13 +181,13 @@ export default function SubmitLaundry() {
         {/* Details */}
         <div className="card p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.08s" }}>
           <div>
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">📝 What are you dropping off?</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">📝 What are you dropping off?</label>
             <input className="field" value={description} onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. 2 shirts, 3 t-shirts, 1 pair of jeans" />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-3">👕 Approximate size</label>
+            <label className="block text-sm font-medium text-[#475569] mb-3">👕 Approximate size</label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
               {SIZES.map((s) => {
                 const on = itemEstimate === s.value;
@@ -195,13 +195,13 @@ export default function SubmitLaundry() {
                   <button key={s.value} type="button" onClick={() => setItemEstimate(s.value)}
                     className={`rounded-xl border p-3.5 text-center transition-all cursor-pointer ${
                       on
-                        ? "border-transparent text-white shadow-lg shadow-accent-600/30"
-                        : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06]"
+                        ? "border-transparent text-slate-900 shadow-lg shadow-accent-600/30"
+                        : "border-slate-900/10 bg-slate-900/[0.03] hover:bg-white/[0.06]"
                     }`}
-                    style={on ? { background: "linear-gradient(135deg,#6366f1,#8b5cf6)" } : {}}>
+                    style={on ? { background: "linear-gradient(135deg,#2563eb,#2563eb)" } : {}}>
                     <span className="block text-xl mb-1">{s.icon}</span>
                     <span className="block text-sm font-semibold">{s.label}</span>
-                    <span className={`block text-[10px] mt-0.5 ${on ? "text-white/70" : "text-[#5d6577]"}`}>{s.hint}</span>
+                    <span className={`block text-[10px] mt-0.5 ${on ? "text-slate-600" : "text-[#64748b]"}`}>{s.hint}</span>
                   </button>
                 );
               })}
@@ -212,25 +212,25 @@ export default function SubmitLaundry() {
         {/* Pricing Section */}
         {showPricing && (
           <div className="card p-6 space-y-5 animate-fade-up" style={{ animationDelay: "0.12s" }}>
-            <h2 className="text-lg font-semibold text-white">💰 Price breakdown</h2>
+            <h2 className="text-lg font-semibold text-slate-900">💰 Price breakdown</h2>
 
             {priceQuote && (
               <div className="space-y-3">
                 {/* Service tier */}
                 <div className="flex items-center justify-between py-2.5 border-b border-white/[0.05]">
-                  <span className="text-sm text-[#b9c0d0]">Service tier</span>
-                  <span className="text-sm font-semibold text-white">{priceQuote.service?.name || "Standard"}</span>
+                  <span className="text-sm text-[#475569]">Service tier</span>
+                  <span className="text-sm font-semibold text-slate-900">{priceQuote.service?.name || "Standard"}</span>
                 </div>
 
                 {/* Items */}
                 {priceQuote.items && priceQuote.items.length > 0 && (
                   <div>
-                    <p className="text-xs text-[#5d6577] mb-2.5">Items</p>
+                    <p className="text-xs text-[#64748b] mb-2.5">Items</p>
                     <div className="space-y-2">
                       {priceQuote.items.map((it, i) => (
                         <div key={i} className="flex items-center justify-between">
-                          <span className="text-sm text-[#b9c0d0] capitalize">{it.type} × {it.count}</span>
-                          <span className="text-sm text-white">₹{it.price * it.count}</span>
+                          <span className="text-sm text-[#475569] capitalize">{it.type} × {it.count}</span>
+                          <span className="text-sm text-slate-900">₹{it.price * it.count}</span>
                         </div>
                       ))}
                     </div>
@@ -239,45 +239,45 @@ export default function SubmitLaundry() {
 
                 {/* Subtotal */}
                 <div className="flex items-center justify-between py-2.5">
-                  <span className="text-sm text-[#8b93a7]">Subtotal</span>
-                  <span className="text-sm text-white">₹{priceQuote.subtotal}</span>
+                  <span className="text-sm text-[#475569]">Subtotal</span>
+                  <span className="text-sm text-slate-900">₹{priceQuote.subtotal}</span>
                 </div>
 
                 {/* Discount */}
                 {priceQuote.discount > 0 && (
                   <div className="flex items-center justify-between py-2.5">
-                    <span className="text-sm text-emerald-300">Discount {priceQuote.couponCode && `(code: ${priceQuote.couponCode})`}</span>
-                    <span className="text-sm text-emerald-300">-₹{priceQuote.discount}</span>
+                    <span className="text-sm text-emerald-700">Discount {priceQuote.couponCode && `(code: ${priceQuote.couponCode})`}</span>
+                    <span className="text-sm text-emerald-700">-₹{priceQuote.discount}</span>
                   </div>
                 )}
 
                 {/* Tax */}
-                <div className="flex items-center justify-between py-2.5 border-t border-white/[0.06]">
-                  <span className="text-sm text-[#8b93a7]">Tax (5%)</span>
-                  <span className="text-sm text-white">₹{priceQuote.tax}</span>
+                <div className="flex items-center justify-between py-2.5 border-t border-slate-900/10">
+                  <span className="text-sm text-[#475569]">Tax (5%)</span>
+                  <span className="text-sm text-slate-900">₹{priceQuote.tax}</span>
                 </div>
 
                 {/* Total */}
                 <div className="flex items-center justify-between py-2.5 border-t border-white/[0.12]">
-                  <span className="font-bold text-white text-lg">Total</span>
-                  <span className="font-bold text-accent-300 text-xl">₹{priceQuote.total}</span>
+                  <span className="font-bold text-slate-900 text-lg">Total</span>
+                  <span className="font-bold text-accent-600 text-xl">₹{priceQuote.total}</span>
                 </div>
               </div>
             )}
 
             {/* Coupon input */}
-            <div className="pt-3 border-t border-white/[0.06]">
+            <div className="pt-3 border-t border-slate-900/10">
               {priceQuote?.couponCode ? (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="badge bg-emerald-400/10 border-emerald-400/25 text-emerald-300 text-xs py-1">
+                    <span className="badge bg-emerald-400/10 border-emerald-400/25 text-emerald-700 text-xs py-1">
                       ✅ {priceQuote.couponCode} applied
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={removeCoupon}
-                    className="text-xs text-rose-300 hover:text-rose-200 font-medium cursor-pointer"
+                    className="text-xs text-rose-700 hover:text-rose-700 font-medium cursor-pointer"
                   >
                     Remove
                   </button>

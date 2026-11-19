@@ -31,7 +31,7 @@ function Loader() {
       <div className="app-grid" />
       <div className="flex flex-col items-center gap-5">
         <div className="w-10 h-10 rounded-full border-2 border-accent-500/25 border-t-accent-500 animate-spin" />
-        <p className="text-sm text-[#8b93a7] font-medium tracking-wide">Loading…</p>
+        <p className="text-sm text-[#475569] font-medium tracking-wide">Loading…</p>
       </div>
     </div>
   );
@@ -227,7 +227,7 @@ function Shell() {
         <div className="fixed bottom-5 left-5 z-[80]">
           <Link
             to="/admin"
-            className="flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full glass-nav border border-white/10 shadow-xl shadow-black/40 hover:border-accent-400/40 transition-all cursor-pointer text-xs font-medium text-accent-300"
+            className="flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full glass-nav border border-slate-900/10 shadow-xl shadow-slate-900/10 hover:border-accent-400/40 transition-all cursor-pointer text-xs font-medium text-accent-600"
           >
             <span>🛠️</span> Admin panel
           </Link>

@@ -140,7 +140,7 @@ export default function TimingsSetup() {
         {!readOnly ? (
           <div className="card p-10 text-center">
             <p className="text-4xl mb-4">🗓️</p>
-            <p className="text-lg font-semibold text-white">No schedule published yet</p>
+            <p className="text-lg font-semibold text-slate-900">No schedule published yet</p>
             <p className="muted text-sm mt-1.5 max-w-sm mx-auto">
               The laundry service for block {user?.hostelBlock} hasn't shared its days yet. You'll be able to submit as soon as they do.
             </p>
@@ -148,8 +148,8 @@ export default function TimingsSetup() {
         ) : (
           <div className="card p-6 animate-fade-up" style={{ animationDelay: "0.05s" }}>
             <div className="flex items-center justify-between mb-6">
-              <span className="badge bg-accent-500/15 border border-accent-400/30 text-accent-300">{readOnly.hostelBlock}</span>
-              <span className="badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-300 text-[10px]">
+              <span className="badge bg-accent-500/15 border border-accent-400/30 text-accent-600">{readOnly.hostelBlock}</span>
+              <span className="badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-700 text-[10px]">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-glow mr-1.5 inline-block" /> live schedule
               </span>
             </div>
@@ -160,19 +160,19 @@ export default function TimingsSetup() {
                 ["Pickup window", `${readOnly.pickupStart} – ${readOnly.pickupEnd}`],
                 ["Submission cut-off", readOnly.cutoffTime],
               ].map(([l, v]) => (
-                <div key={l} className="rounded-xl bg-white/[0.03] border border-white/[0.06] px-4 py-3">
-                  <p className="text-[10px] uppercase tracking-wider text-[#5d6577] font-semibold">{l}</p>
-                  <p className="text-sm font-bold text-white mt-1">{v}</p>
+                <div key={l} className="rounded-xl bg-slate-900/[0.03] border border-slate-900/10 px-4 py-3">
+                  <p className="text-[10px] uppercase tracking-wider text-[#64748b] font-semibold">{l}</p>
+                  <p className="text-sm font-bold text-slate-900 mt-1">{v}</p>
                 </div>
               ))}
             </div>
             <div className="mt-4 rounded-xl bg-accent-500/[0.06] border border-accent-400/20 px-4 py-3 flex items-center justify-between">
-              <p className="text-sm text-[#b9c0d0]">Expected turnaround</p>
-              <span className="badge text-white" style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}>
+              <p className="text-sm text-[#475569]">Expected turnaround</p>
+              <span className="badge text-slate-900" style={{ background: "linear-gradient(135deg,#2563eb,#2563eb)" }}>
                 ~{readOnly.turnaroundDays} day{readOnly.turnaroundDays !== 1 ? "s" : ""}
               </span>
             </div>
-            <p className="text-[11px] text-[#5d6577] mt-5">
+            <p className="text-[11px] text-[#64748b] mt-5">
               Schedule changes are managed by the laundry staff — ping them if the days look off.
             </p>
           </div>
@@ -196,7 +196,7 @@ export default function TimingsSetup() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="rounded-xl px-4 py-3 text-sm text-rose-200 border animate-scale-in"
+          <div className="rounded-xl px-4 py-3 text-sm text-rose-700 border animate-scale-in"
             style={{ background: "rgba(251,113,133,0.08)", borderColor: "rgba(251,113,133,0.25)" }}>
             ⚠️ {error}
           </div>
@@ -206,17 +206,17 @@ export default function TimingsSetup() {
         <div className="card p-6 space-y-6 animate-fade-up" style={{ animationDelay: "0.04s" }}>
           {isWarden ? (
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">🏠 Hostel block</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">🏠 Hostel block</label>
               <select
                 className="field"
                 value={hostelBlock || ""}
                 onChange={(e) => { setHostelBlock(e.target.value); loadFor(e.target.value); }}
               >
-                <option value="" className="bg-[#0b0d15]">Select a block…</option>
+                <option value="" className="bg-white">Select a block…</option>
                 {allSchedules.map((s) => (
-                  <option key={s._id} value={s.hostelBlock} className="bg-[#0b0d15]">{s.hostelBlock} · published</option>
+                  <option key={s._id} value={s.hostelBlock} className="bg-white">{s.hostelBlock} · published</option>
                 ))}
-                <option value="__new" className="bg-[#0b0d15]">＋ New block…</option>
+                <option value="__new" className="bg-white">＋ New block…</option>
               </select>
               {hostelBlock === "__new" && (
                 <input
@@ -229,16 +229,16 @@ export default function TimingsSetup() {
             </div>
           ) : (
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#5d6577] font-semibold mb-2">🏠 Your block</label>
-              <div className="badge text-white text-sm px-4 py-2.5" style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}>
+              <label className="block text-[11px] uppercase tracking-wider text-[#64748b] font-semibold mb-2">🏠 Your block</label>
+              <div className="badge text-slate-900 text-sm px-4 py-2.5" style={{ background: "linear-gradient(135deg,#2563eb,#2563eb)" }}>
                 {user?.hostelBlock || "—"}
               </div>
-              <p className="text-[11px] text-[#5d6577] mt-2">Block staff manage their own block's schedule.</p>
+              <p className="text-[11px] text-[#64748b] mt-2">Block staff manage their own block's schedule.</p>
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-3">📅 Laundry days</label>
+            <label className="block text-sm font-medium text-[#475569] mb-3">📅 Laundry days</label>
             <div className="grid grid-cols-7 gap-1.5">
               {DAYS.map((d) => {
                 const on = laundryDays.includes(d);
@@ -246,44 +246,44 @@ export default function TimingsSetup() {
                   <button key={d} type="button" onClick={() => toggleDay(d)}
                     className={`py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                       on
-                        ? "text-white shadow-lg shadow-accent-600/30"
-                        : "text-[#8b93a7] bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] hover:text-white"
+                        ? "text-slate-900 shadow-lg shadow-accent-600/30"
+                        : "text-[#475569] bg-slate-900/[0.04] border border-slate-900/10 hover:bg-slate-900/[0.07] hover:text-slate-900"
                     }`}
-                    style={on ? { background: "linear-gradient(135deg,#6366f1,#8b5cf6)" } : {}}>
+                    style={on ? { background: "linear-gradient(135deg,#2563eb,#2563eb)" } : {}}>
                     {d}
                   </button>
                 );
               })}
             </div>
-            {laundryDays.length === 0 && <p className="text-xs text-amber-300/80 mt-2">Select at least one day</p>}
+            {laundryDays.length === 0 && <p className="text-xs text-amber-700/80 mt-2">Select at least one day</p>}
           </div>
         </div>
 
         {/* Windows */}
         <div className="card p-6 space-y-5 animate-fade-up" style={{ animationDelay: "0.08s" }}>
-          <h3 className="text-sm font-semibold text-white">⏰ Windows</h3>
+          <h3 className="text-sm font-semibold text-slate-900">⏰ Windows</h3>
 
           <div className="grid sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#5d6577] font-semibold mb-2">Drop-off</label>
+              <label className="block text-[11px] uppercase tracking-wider text-[#64748b] font-semibold mb-2">Drop-off</label>
               <div className="flex items-center gap-2">
                 <input type="time" className="field w-auto min-w-0 flex-1 px-3" value={dropoffStart} onChange={(e) => setDropoffStart(e.target.value)} />
-                <span className="text-[#5d6577]">–</span>
+                <span className="text-[#64748b]">–</span>
                 <input type="time" className="field w-auto min-w-0 flex-1 px-3" value={dropoffEnd} onChange={(e) => setDropoffEnd(e.target.value)} />
               </div>
             </div>
             <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#5d6577] font-semibold mb-2">Pickup</label>
+              <label className="block text-[11px] uppercase tracking-wider text-[#64748b] font-semibold mb-2">Pickup</label>
               <div className="flex items-center gap-2">
                 <input type="time" className="field w-auto min-w-0 flex-1 px-3" value={pickupStart} onChange={(e) => setPickupStart(e.target.value)} />
-                <span className="text-[#5d6577]">–</span>
+                <span className="text-[#64748b]">–</span>
                 <input type="time" className="field w-auto min-w-0 flex-1 px-3" value={pickupEnd} onChange={(e) => setPickupEnd(e.target.value)} />
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] uppercase tracking-wider text-[#5d6577] font-semibold mb-2">
+            <label className="block text-[11px] uppercase tracking-wider text-[#64748b] font-semibold mb-2">
               Cut-off · latest same-day submission
             </label>
             <input type="time" className="field px-3 sm:w-40" value={cutoffTime} onChange={(e) => setCutoffTime(e.target.value)} />
@@ -293,8 +293,8 @@ export default function TimingsSetup() {
         {/* Turnaround */}
         <div className="card p-6 animate-fade-up" style={{ animationDelay: "0.12s" }}>
           <div className="flex items-center justify-between mb-5">
-            <span className="text-sm font-medium text-[#b9c0d0]">🕐 Expected turnaround</span>
-            <span className="badge text-white" style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}>
+            <span className="text-sm font-medium text-[#475569]">🕐 Expected turnaround</span>
+            <span className="badge text-slate-900" style={{ background: "linear-gradient(135deg,#2563eb,#2563eb)" }}>
               ~{turnaroundDays} day{turnaroundDays !== 1 ? "s" : ""}
             </span>
           </div>
@@ -304,7 +304,7 @@ export default function TimingsSetup() {
             className="w-full accent-accent-500 cursor-pointer"
             style={{ height: 6 }}
           />
-          <div className="flex justify-between text-[10px] text-[#5d6577] mt-2">
+          <div className="flex justify-between text-[10px] text-[#64748b] mt-2">
             <span>1 day · express</span>
             <span>14 days</span>
           </div>

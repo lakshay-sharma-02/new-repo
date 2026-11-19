@@ -20,13 +20,13 @@ const ICONS = {
   folding: "👕", ready: "🎉", picked_up: "🏠",
 };
 const STAGE_COLOR = {
-  submitted: { bg: "rgba(148,163,184,0.12)", fg: "#cbd5e1", border: "rgba(148,163,184,0.25)" },
+  submitted: { bg: "rgba(148,163,184,0.12)", fg: "#475569", border: "rgba(148,163,184,0.25)" },
   received: { bg: "rgba(34,211,238,0.12)", fg: "#67e8f9", border: "rgba(34,211,238,0.3)" },
-  washing: { bg: "rgba(129,140,248,0.14)", fg: "#a5b4fc", border: "rgba(129,140,248,0.35)" },
-  drying: { bg: "rgba(251,191,36,0.12)", fg: "#fcd34d", border: "rgba(251,191,36,0.3)" },
+  washing: { bg: "rgba(59,130,246,0.14)", fg: "#1d4ed8", border: "rgba(59,130,246,0.35)" },
+  drying: { bg: "rgba(251,191,36,0.12)", fg: "#b45309", border: "rgba(251,191,36,0.3)" },
   folding: { bg: "rgba(232,121,249,0.12)", fg: "#f0abfc", border: "rgba(232,121,249,0.3)" },
-  ready: { bg: "rgba(52,211,153,0.12)", fg: "#6ee7b7", border: "rgba(52,211,153,0.35)" },
-  picked_up: { bg: "rgba(148,163,184,0.08)", fg: "#94a3b8", border: "rgba(148,163,184,0.15)" },
+  ready: { bg: "rgba(52,211,153,0.12)", fg: "#047857", border: "rgba(52,211,153,0.35)" },
+  picked_up: { bg: "rgba(148,163,184,0.08)", fg: "#64748b", border: "rgba(148,163,184,0.15)" },
 };
 
 const VIEWS = [
@@ -94,10 +94,10 @@ export default function StaffConsole() {
   }).length;
 
   const stats = [
-    { label: "Queued", value: queued, icon: "📥", ring: "from-slate-400 to-slate-600", text: "#cbd5e1" },
-    { label: "In machines", value: inMachines, icon: "🫧", ring: "from-accent-500 to-fuchsia-500", text: "#a5b4fc" },
-    { label: "Ready now", value: readyNow, icon: "🎉", ring: "from-emerald-400 to-teal-500", text: "#6ee7b7" },
-    { label: "Open issues", value: openIssues, icon: "⚠️", ring: "from-rose-500 to-orange-500", text: "#fda4af" },
+    { label: "Queued", value: queued, icon: "📥", ring: "from-slate-400 to-slate-600", text: "#475569" },
+    { label: "In machines", value: inMachines, icon: "🫧", ring: "from-accent-500 to-sky-500", text: "#1d4ed8" },
+    { label: "Ready now", value: readyNow, icon: "🎉", ring: "from-emerald-400 to-teal-500", text: "#047857" },
+    { label: "Open issues", value: openIssues, icon: "⚠️", ring: "from-rose-500 to-orange-500", text: "#be123c" },
   ];
 
   // Last-7-days activity bars (from batch creation)
@@ -177,7 +177,7 @@ export default function StaffConsole() {
         title="Ops console"
         subtitle={`The laundry floor, live — ${greeting}. Drive every batch from drop-off to pickup.`}
         actions={
-          <span className="inline-flex items-center gap-1.5 badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-300 py-1">
+          <span className="inline-flex items-center gap-1.5 badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-700 py-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-glow" /> live · polls every 3s
           </span>
         }
@@ -188,9 +188,9 @@ export default function StaffConsole() {
         <div className="flex flex-wrap gap-2.5 mb-8 animate-fade-up" style={{ animationDelay: "0.04s" }}>
           {schedules.map((s) => (
             <div key={s._id} className="card px-4 py-2.5 flex items-center gap-3">
-              <span className="badge bg-accent-500/15 border border-accent-400/30 text-accent-300">{s.hostelBlock}</span>
-              <span className="text-xs text-[#8b93a7] font-medium hidden sm:inline">{s.laundryDays.join(" · ")}</span>
-              <span className="text-xs text-[#5d6577] hidden md:inline">
+              <span className="badge bg-accent-500/15 border border-accent-400/30 text-accent-600">{s.hostelBlock}</span>
+              <span className="text-xs text-[#475569] font-medium hidden sm:inline">{s.laundryDays.join(" · ")}</span>
+              <span className="text-xs text-[#64748b] hidden md:inline">
                 drop {s.dropoffStart}–{s.dropoffEnd} · pickup {s.pickupStart}–{s.pickupEnd} · ~{s.turnaroundDays}d
               </span>
             </div>
@@ -204,7 +204,7 @@ export default function StaffConsole() {
         {stats.map((s, i) => (
           <div key={s.label} className="card card-hover p-5 flex items-center justify-between animate-fade-up" style={{ animationDelay: `${i * 0.05}s` }}>
             <div>
-              <p className="text-xs text-[#8b93a7] font-medium uppercase tracking-wider">{s.label}</p>
+              <p className="text-xs text-[#475569] font-medium uppercase tracking-wider">{s.label}</p>
               <p className="text-3xl font-bold mt-1.5" style={{ color: s.text }}>{s.value}</p>
             </div>
             <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${s.ring} flex items-center justify-center text-lg shadow-lg`} style={{ opacity: 0.9 }}>
@@ -217,26 +217,28 @@ export default function StaffConsole() {
       {/* Weekly activity */}
       <div className="card p-6 mb-8 animate-fade-up" style={{ animationDelay: "0.08s" }}>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-sm font-bold text-white">Last 7 days · batches dropped off</h2>
-          <span className="text-xs text-[#5d6577]">{batches.length} total · {completedToday} picked up today</span>
+          <h2 className="text-sm font-bold text-slate-900">Last 7 days · batches dropped off</h2>
+          <span className="text-xs text-[#64748b]">{batches.length} total · {completedToday} picked up today</span>
         </div>
-        <div className="flex items-end gap-3 h-28">
+        <div className="flex items-end gap-3 h-32">
           {bars.map((b) => (
-            <div key={b.key} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-              <span className="text-[11px] font-semibold" style={{ color: b.today ? "#a5b4fc" : "#8b93a7" }}>{b.count}</span>
-              <div
-                className="w-full rounded-t-lg transition-all duration-500"
-                style={{
-                  height: `${Math.max(b.h, 4)}%`,
-                  background: b.today
-                    ? "linear-gradient(180deg,#818cf8,#6d28d9)"
-                    : b.count > 0
-                      ? "linear-gradient(180deg,rgba(129,140,248,0.7),rgba(109,40,217,0.4))"
-                      : "rgba(255,255,255,0.05)",
-                  boxShadow: b.today ? "0 0 18px rgba(99,102,241,0.45)" : "none",
-                }}
-              />
-              <span className={`text-[10px] font-semibold ${b.today ? "text-accent-300" : "text-[#5d6577]"}`}>{b.label}</span>
+            <div key={b.key} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+              <span className="text-[11px] font-semibold" style={{ color: b.today ? "#1d4ed8" : "#5b6577" }}>{b.count}</span>
+              <div className="w-full flex-1 flex items-end">
+                <div
+                  className="w-full rounded-t-md transition-all duration-500"
+                  style={{
+                    height: `${Math.max(b.h, 4)}%`,
+                    background: b.today
+                      ? "linear-gradient(180deg,#3b82f6,#1d4ed8)"
+                      : b.count > 0
+                        ? "rgba(59,130,246,0.45)"
+                        : "rgba(15,23,42,0.05)",
+                    boxShadow: b.today ? "0 0 16px rgba(37,99,235,0.25)" : "none",
+                  }}
+                />
+              </div>
+              <span className={`text-[10px] font-semibold ${b.today ? "text-accent-600" : "text-[#64748b]"}`}>{b.label}</span>
             </div>
           ))}
         </div>
@@ -251,9 +253,9 @@ export default function StaffConsole() {
               key={v.key}
               onClick={() => setView(v.key)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer border ${
-                on ? "text-white border-accent-400/40 shadow-lg shadow-accent-600/20" : "text-[#8b93a7] border-white/10 hover:text-white hover:bg-white/[0.04]"
+                on ? "text-slate-900 border-accent-400/40 shadow-lg shadow-accent-600/20" : "text-[#475569] border-slate-900/10 hover:text-slate-900 hover:bg-slate-900/[0.04]"
               }`}
-              style={on ? { background: "linear-gradient(135deg,#6366f1,#8b5cf6)" } : { background: "rgba(255,255,255,0.02)" }}
+              style={on ? { background: "linear-gradient(135deg,#2563eb,#2563eb)" } : { background: "rgba(15,23,42,0.02)" }}
             >
               {v.label}
             </button>
@@ -262,12 +264,12 @@ export default function StaffConsole() {
         {blocks.length > 1 && (
           <div className="flex items-center gap-1 ml-auto">
             <button onClick={() => setBlockFilter("ALL")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${blockFilter === "ALL" ? "bg-white/10 text-white" : "text-[#5d6577] hover:text-white"}`}>
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${blockFilter === "ALL" ? "bg-slate-900/10 text-slate-900" : "text-[#64748b] hover:text-slate-900"}`}>
               All blocks
             </button>
             {blocks.map((bl) => (
               <button key={bl} onClick={() => setBlockFilter(bl)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${blockFilter === bl ? "bg-white/10 text-white" : "text-[#5d6577] hover:text-white"}`}>
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${blockFilter === bl ? "bg-slate-900/10 text-slate-900" : "text-[#64748b] hover:text-slate-900"}`}>
                 {bl}
               </button>
             ))}
@@ -278,7 +280,7 @@ export default function StaffConsole() {
       {visible.length === 0 ? (
         <div className="card p-14 text-center">
           <p className="text-5xl mb-4 opacity-80">🧺</p>
-          <p className="text-lg font-semibold text-white">Nothing here right now</p>
+          <p className="text-lg font-semibold text-slate-900">Nothing here right now</p>
           <p className="muted text-sm mt-1">New drop-offs will appear the moment a student submits a batch.</p>
         </div>
       ) : (
@@ -302,39 +304,39 @@ export default function StaffConsole() {
                   {/* Left: identity + description */}
                   <div className="flex-1 min-w-[220px]">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="badge bg-accent-500/15 border border-accent-400/25 text-accent-300 font-mono text-[10px]">
+                      <span className="badge bg-accent-500/15 border border-accent-400/25 text-accent-600 font-mono text-[10px]">
                         #{String(b._id).slice(-6).toUpperCase()}
                       </span>
-                      <span className="badge bg-white/[0.05] border border-white/10 text-[#b9c0d0] text-[10px]">{b.hostelBlock}</span>
-                      <span className="text-xs font-semibold text-white/85">{b.ownerName || "—"}</span>
-                      <span className="text-[10px] text-[#5d6577]">
+                      <span className="badge bg-slate-900/[0.04] border border-slate-900/10 text-[#475569] text-[10px]">{b.hostelBlock}</span>
+                      <span className="text-xs font-semibold text-slate-700">{b.ownerName || "—"}</span>
+                      <span className="text-[10px] text-[#64748b]">
                         {new Date(b.createdAt).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
                       </span>
                     </div>
                     {b.description && (
-                      <p className="text-sm text-[#b9c0d0] mt-2.5 leading-snug">{b.description}</p>
+                      <p className="text-sm text-[#475569] mt-2.5 leading-snug">{b.description}</p>
                     )}
                     <div className="flex items-center gap-3 mt-2.5 flex-wrap">
                       <span className="badge py-1" style={{ background: c.bg, border: `1px solid ${c.border}`, color: c.fg }}>
                         {ICONS[b.status]} {LABELS[b.status]}
                       </span>
-                      <span className="text-[11px] text-[#5d6577]">
+                      <span className="text-[11px] text-[#64748b]">
                         est. ready{" "}
-                        <span className="text-white/70 font-medium">
+                        <span className="text-slate-600 font-medium">
                           {new Date(b.estimatedReady).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })}
                         </span>
                       </span>
                       {b.issueResolved && (
-                        <span className="badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-300 text-[10px]">✅ issue resolved</span>
+                        <span className="badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-700 text-[10px]">✅ issue resolved</span>
                       )}
                     </div>
                     {hasOpenIssue && (
-                      <p className="text-xs text-rose-300/90 mt-2 bg-rose-400/[0.07] border border-rose-400/20 rounded-lg px-3 py-2">
+                      <p className="text-xs text-rose-700/90 mt-2 bg-rose-400/[0.07] border border-rose-400/20 rounded-lg px-3 py-2">
                         ⚠️ {b.issueDescription}
                       </p>
                     )}
                     {b.issueResolved && b.issueResponse && (
-                      <p className="text-xs text-emerald-300/80 mt-2 bg-emerald-400/[0.06] border border-emerald-400/15 rounded-lg px-3 py-2">
+                      <p className="text-xs text-emerald-700/80 mt-2 bg-emerald-400/[0.06] border border-emerald-400/15 rounded-lg px-3 py-2">
                         💬 {b.issueResponse}
                       </p>
                     )}
@@ -354,7 +356,7 @@ export default function StaffConsole() {
                           disabled={busyId === b._id}
                         >
                           {options.map((s) => (
-                            <option key={s} value={s} className="bg-[#0b0d15]">
+                            <option key={s} value={s} className="bg-white">
                               → {LABELS[s]} {s === "picked_up" ? "🏠" : ""}
                             </option>
                           ))}
@@ -363,7 +365,7 @@ export default function StaffConsole() {
                       </div>
                     )}
                     {b.status === "picked_up" && (
-                      <span className="badge text-[10px] py-1" style={{ background: "rgba(148,163,184,0.1)", color: "#94a3b8", border: "1px solid rgba(148,163,184,0.2)" }}>
+                      <span className="badge text-[10px] py-1" style={{ background: "rgba(148,163,184,0.1)", color: "#64748b", border: "1px solid rgba(148,163,184,0.2)" }}>
                         Completed 🏠
                       </span>
                     )}
@@ -388,7 +390,7 @@ export default function StaffConsole() {
                             </button>
                           </div>
                         ) : (
-                          <button onClick={() => startResolve(b)} className="btn-ghost text-xs py-2 px-3 text-rose-300 hover:text-rose-200 border-rose-400/25 hover:bg-rose-500/10">
+                          <button onClick={() => startResolve(b)} className="btn-ghost text-xs py-2 px-3 text-rose-700 hover:text-rose-700 border-rose-400/25 hover:bg-rose-500/10">
                             ⚠️ Resolve issue
                           </button>
                         )}

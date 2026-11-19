@@ -7,10 +7,10 @@ export default function NotFound() {
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 py-24 text-center animate-fade-up">
       <p className="text-6xl mb-6">🧺</p>
-      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-300 mb-3">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-600 mb-3">
         404 · page not found
       </p>
-      <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+      <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
         This one went missing
       </h1>
       <p className="muted mt-3 max-w-sm mx-auto">

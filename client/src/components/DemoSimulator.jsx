@@ -29,11 +29,11 @@ export default function DemoSimulator() {
       const res = await api.post("/demo/advance");
       const r = res.data || {};
       if (r.ok) {
-        pushLog(r.message || "batch advanced", "#34d399");
+        pushLog(r.message || "batch advanced", "#059669");
       } else if (r.reason === "no_schedule") {
         setDisabled(true);
         setPlaying(false);
-        pushLog("no published schedule for your block", "#fbbf24");
+        pushLog("no published schedule for your block", "#b45309");
       }
     } catch (err) {
       if (err.response?.status === 400 || err.response?.status === 401 || err.response?.status === 404) {
@@ -64,18 +64,18 @@ export default function DemoSimulator() {
                 <span className={`absolute inline-flex h-full w-full rounded-full bg-emerald-400 ${playing ? "animate-ping opacity-60" : "opacity-0"}`} />
                 <span className="relative inline-flex rounded-full w-2.5 h-2.5 bg-emerald-400" />
               </span>
-              <p className="text-sm font-semibold text-white">Live demo</p>
+              <p className="text-sm font-semibold text-slate-900">Live demo</p>
             </div>
             <button
               onClick={() => setOpen(false)}
               aria-label="Close demo panel"
-              className="text-[#5d6577] hover:text-white text-lg leading-none cursor-pointer"
+              className="text-[#64748b] hover:text-slate-900 text-lg leading-none cursor-pointer"
             >
               ×
             </button>
           </div>
 
-          <p className="text-[11px] text-[#8b93a7] mb-3 leading-relaxed">
+          <p className="text-[11px] text-[#475569] mb-3 leading-relaxed">
             Driving your block's laundry service in real time — batches advance just like staff would from the ops console.
           </p>
 
@@ -85,20 +85,20 @@ export default function DemoSimulator() {
               onClick={() => { setPlaying((p) => !p); setDisabled(false); }}
               className="flex-1 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer border"
               style={{
-                background: playing ? "rgba(99,102,241,0.15)" : "rgba(255,255,255,0.05)",
-                borderColor: playing ? "rgba(129,140,248,0.4)" : "rgba(255,255,255,0.1)",
-                color: playing ? "#c7d2fe" : "#8b93a7",
+                background: playing ? "rgba(37,99,235,0.15)" : "rgba(15,23,42,0.04)",
+                borderColor: playing ? "rgba(59,130,246,0.4)" : "rgba(15,23,42,0.10)",
+                color: playing ? "#1d4ed8" : "#5b6577",
               }}
             >
               {playing ? "❚❚ Pause" : "▶ Play"}
             </button>
-            <div className="flex rounded-lg overflow-hidden border border-white/10">
+            <div className="flex rounded-lg overflow-hidden border border-slate-900/10">
               {SPEEDS.map((s, i) => (
                 <button
                   key={s.label}
                   onClick={() => setSpeedIdx(i)}
                   className={`px-2.5 py-2 text-xs font-semibold transition-colors cursor-pointer ${
-                    i === speedIdx ? "bg-accent-500 text-white" : "bg-white/[0.04] text-[#8b93a7] hover:text-white"
+                    i === speedIdx ? "bg-accent-500 text-white" : "bg-slate-900/[0.04] text-[#475569] hover:text-slate-900"
                   }`}
                 >
                   {s.label}
@@ -108,7 +108,7 @@ export default function DemoSimulator() {
           </div>
 
           {disabled && (
-            <p className="text-[11px] text-amber-300/90 bg-amber-400/10 border border-amber-400/20 rounded-lg px-3 py-2 mb-2">
+            <p className="text-[11px] text-amber-700/90 bg-amber-400/10 border border-amber-400/20 rounded-lg px-3 py-2 mb-2">
               Your block doesn't have a published schedule yet — the driver can't create new batches until staff publish one.
             </p>
           )}
@@ -116,13 +116,13 @@ export default function DemoSimulator() {
           {/* Activity feed */}
           <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
             {logs.length === 0 && (
-              <p className="text-[11px] text-[#5d6577] text-center py-3">Waiting for activity…</p>
+              <p className="text-[11px] text-[#64748b] text-center py-3">Waiting for activity…</p>
             )}
             {logs.map((l, i) => (
               <div key={i} className="flex items-start gap-2 text-[11px] animate-fade-in">
-                <span className="text-[#5d6577] font-mono shrink-0 pt-0.5">{l.t}</span>
+                <span className="text-[#64748b] font-mono shrink-0 pt-0.5">{l.t}</span>
                 <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: l.color }} />
-                <span className="text-[#b9c0d0] truncate">{l.msg}</span>
+                <span className="text-[#475569] truncate">{l.msg}</span>
               </div>
             ))}
           </div>
@@ -132,13 +132,13 @@ export default function DemoSimulator() {
       {/* Toggle pill */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="group flex items-center gap-2.5 pl-3 pr-4 py-2.5 rounded-full glass-nav border border-white/10 shadow-xl shadow-black/40 hover:border-accent-400/40 transition-all cursor-pointer"
+        className="group flex items-center gap-2.5 pl-3 pr-4 py-2.5 rounded-full glass-nav border border-slate-900/10 shadow-xl shadow-slate-900/10 hover:border-accent-400/40 transition-all cursor-pointer"
       >
-        <span className={`w-2 h-2 rounded-full ${playing ? "bg-emerald-400 animate-pulse-ring" : "bg-white/40"}`} />
-        <span className="text-xs font-semibold text-white/90">
+        <span className={`w-2 h-2 rounded-full ${playing ? "bg-emerald-400 animate-pulse-ring" : "bg-slate-400"}`} />
+        <span className="text-xs font-semibold text-slate-800">
           {open ? "Demo simulator" : playing ? "Simulating live…" : "Demo simulator"}
         </span>
-        <span className={`text-[10px] text-white/60 transition-transform ${open ? "rotate-180" : ""}`}>▲</span>
+        <span className={`text-[10px] text-slate-500 transition-transform ${open ? "rotate-180" : ""}`}>▲</span>
       </button>
     </div>
   );

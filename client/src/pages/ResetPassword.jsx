@@ -44,23 +44,23 @@ export default function ResetPassword() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative">
-      <Link to="/login" className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs font-medium text-[#8b93a7] hover:text-white transition-colors">
+      <Link to="/login" className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs font-medium text-[#475569] hover:text-slate-900 transition-colors">
         ← Back to sign in
       </Link>
       <div className="w-full max-w-md animate-fade-up">
         <div className="text-center mb-9">
-          <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-500 to-fuchsia-500 items-center justify-center text-3xl mb-5 shadow-2xl shadow-accent-600/40">
+          <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-500 to-sky-500 items-center justify-center text-3xl mb-5 shadow-2xl shadow-accent-600/40">
             🔐
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Choose a new password</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Choose a new password</h1>
           <p className="muted text-sm mt-1.5">At least 8 characters, with a letter and a number</p>
         </div>
 
-        <div className="card p-7 sm:p-8 shadow-2xl shadow-black/40">
+        <div className="card p-7 sm:p-8 shadow-2xl shadow-slate-900/10">
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && (
               <div
-                className="rounded-xl px-4 py-3 text-sm text-rose-200 flex items-center gap-2.5 border"
+                className="rounded-xl px-4 py-3 text-sm text-rose-700 flex items-center gap-2.5 border"
                 style={{ background: "rgba(251,113,133,0.08)", borderColor: "rgba(251,113,133,0.25)" }}
               >
                 <span>⚠️</span> {error}
@@ -68,7 +68,7 @@ export default function ResetPassword() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">New password</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">New password</label>
               <input
                 type="password"
                 required
@@ -82,7 +82,7 @@ export default function ResetPassword() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Confirm password</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">Confirm password</label>
               <input
                 type="password"
                 required
@@ -102,7 +102,7 @@ export default function ResetPassword() {
         </div>
 
         <p className="text-center text-sm muted mt-7">
-          <Link to="/login" className="text-accent-300 hover:text-white font-medium">
+          <Link to="/login" className="text-accent-600 hover:text-slate-900 font-medium">
             Back to sign in
           </Link>
         </p>

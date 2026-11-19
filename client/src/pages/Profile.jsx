@@ -21,17 +21,17 @@ function PasswordStrength({ password }) {
   const passed = checks.filter((c) => c.test).length;
   const pct = (passed / checks.length) * 100;
 
-  const color = passed < 2 ? "#fb7185" : passed < 3 ? "#fbbf24" : passed < 4 ? "#60a5fa" : "#34d399";
+  const color = passed < 2 ? "#be123c" : passed < 3 ? "#b45309" : passed < 4 ? "#60a5fa" : "#059669";
 
   return (
     <div className="mt-2">
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[11px] text-[#5d6577] font-medium">Password strength</span>
+        <span className="text-[11px] text-[#64748b] font-medium">Password strength</span>
         <span className="text-[11px] font-medium" style={{ color }}>
           {passed < 2 ? "Weak" : passed < 3 ? "Fair" : passed < 4 ? "Good" : "Strong"}
         </span>
       </div>
-      <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.05)" }}>
+      <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(15,23,42,0.04)" }}>
         <div
           className="h-full rounded-full transition-all duration-300"
           style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${color}, ${color}cc)` }}
@@ -41,7 +41,7 @@ function PasswordStrength({ password }) {
         {checks.map((c) => (
           <div key={c.label} className="flex items-center gap-1.5">
             <span className={`text-xs transition-colors`}>{c.test ? "✅" : "○"}</span>
-            <span className={`text-xs ${c.test ? "text-emerald-300" : "text-[#5d6577]"}`}>{c.label}</span>
+            <span className={`text-xs ${c.test ? "text-emerald-700" : "text-[#64748b]"}`}>{c.label}</span>
           </div>
         ))}
       </div>
@@ -134,7 +134,7 @@ export default function Profile() {
         title="Profile"
         subtitle="Manage your account details, password, and review your activity."
         actions={
-          <button onClick={logout} className="btn-ghost py-2 px-4 text-xs text-rose-300 border-rose-400/25 hover:bg-rose-500/10">
+          <button onClick={logout} className="btn-ghost py-2 px-4 text-xs text-rose-700 border-rose-400/25 hover:bg-rose-500/10">
             Log out
           </button>
         }
@@ -142,28 +142,28 @@ export default function Profile() {
 
       {/* Profile info */}
       <div className="card p-6 mb-8 animate-fade-up" style={{ animationDelay: "0.04s" }}>
-        <h2 className="text-lg font-semibold text-white mb-5 flex items-center gap-2.5">👤 Profile information</h2>
+        <h2 className="text-lg font-semibold text-slate-900 mb-5 flex items-center gap-2.5">👤 Profile information</h2>
 
         <form onSubmit={handleProfileSave} className="grid sm:grid-cols-2 gap-5">
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Full name</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">Full name</label>
             <input className="field" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Email</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">Email</label>
             <input type="email" className="field bg-white/[0.02] cursor-default" value={user.email} disabled />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Role</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">Role</label>
             <input className="field bg-white/[0.02] cursor-default" value={ROLE_LABELS[user.role] || user.role} disabled />
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Hostel block</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">Hostel block</label>
             <input className="field" value={hostelBlock} onChange={(e) => setHostelBlock(e.target.value)} placeholder="e.g. B6" />
-            <p className="text-[11px] text-[#5d6577] mt-1.5">Changes here also affect your batch schedule display.</p>
+            <p className="text-[11px] text-[#64748b] mt-1.5">Changes here also affect your batch schedule display.</p>
           </div>
 
           <div className="sm:col-span-2">
@@ -180,11 +180,11 @@ export default function Profile() {
 
       {/* Change password */}
       <div className="card p-6 mb-8 animate-fade-up" style={{ animationDelay: "0.08s" }}>
-        <h2 className="text-lg font-semibold text-white mb-5 flex items-center gap-2.5">🔐 Change password</h2>
+        <h2 className="text-lg font-semibold text-slate-900 mb-5 flex items-center gap-2.5">🔐 Change password</h2>
 
         <form onSubmit={handlePasswordChange} className="grid sm:grid-cols-2 gap-5">
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Current password</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">Current password</label>
             <input
               type="password"
               className="field"
@@ -197,7 +197,7 @@ export default function Profile() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">New password</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">New password</label>
             <input
               type="password"
               className="field"
@@ -211,7 +211,7 @@ export default function Profile() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Confirm new password</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">Confirm new password</label>
             <input
               type="password"
               className="field"
@@ -222,7 +222,7 @@ export default function Profile() {
               required
             />
             {newPassword && confirmPassword && newPassword !== confirmPassword && (
-              <p className="text-xs text-rose-300 mt-1.5">⚠ Passwords don't match</p>
+              <p className="text-xs text-rose-700 mt-1.5">⚠ Passwords don't match</p>
             )}
           </div>
 
@@ -240,15 +240,15 @@ export default function Profile() {
 
       {/* Order history */}
       <div className="card p-6 mb-8 animate-fade-up" style={{ animationDelay: "0.12s" }}>
-        <h2 className="text-lg font-semibold text-white mb-5 flex items-center gap-2.5">📦 Order history</h2>
-        <p className="text-[11px] text-[#5d6577] mb-4">
+        <h2 className="text-lg font-semibold text-slate-900 mb-5 flex items-center gap-2.5">📦 Order history</h2>
+        <p className="text-[11px] text-[#64748b] mb-4">
           {batches.length} batch{batches.length !== 1 ? "es" : ""} total
         </p>
 
         {batches.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-2xl mb-2 opacity-60">🧺</p>
-            <p className="text-sm text-[#8b93a7] mb-3">No batches yet</p>
+            <p className="text-sm text-[#475569] mb-3">No batches yet</p>
             <Link to="/submit" className="btn-ghost inline-flex py-2 px-4 text-xs">Submit your first batch</Link>
           </div>
         ) : (
@@ -257,20 +257,20 @@ export default function Profile() {
               <Link
                 key={b._id}
                 to={`/track/${b._id}`}
-                className="flex items-center justify-between py-3 px-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-accent-400/25 hover:bg-white/[0.04] transition-all animate-fade-in"
+                className="flex items-center justify-between py-3 px-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-accent-400/25 hover:bg-slate-900/[0.04] transition-all animate-fade-in"
                 style={{ animationDelay: `${i * 0.05}s` }}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <span className="text-lg shrink-0">{b.status === "picked_up" ? "🏠" : b.status === "ready" ? "🎉" : "⏳"}</span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-white truncate">{b.description || "(no description)"}</p>
-                    <p className="text-[10px] text-[#5d6577] font-mono">#{String(b._id).slice(-5).toUpperCase()}</p>
+                    <p className="text-sm font-medium text-slate-900 truncate">{b.description || "(no description)"}</p>
+                    <p className="text-[10px] text-[#64748b] font-mono">#{String(b._id).slice(-5).toUpperCase()}</p>
                   </div>
                 </div>
                 <span className={`badge text-[10px] py-0.5 ${
-                  b.status === "picked_up" ? "bg-slate-400/10 text-slate-300 border-slate-400/25" :
-                  b.status === "ready" ? "bg-emerald-400/10 text-emerald-300 border-emerald-400/25" :
-                  "bg-accent-500/10 text-accent-300 border-accent-400/25"
+                  b.status === "picked_up" ? "bg-slate-400/10 text-slate-600 border-slate-400/25" :
+                  b.status === "ready" ? "bg-emerald-400/10 text-emerald-700 border-emerald-400/25" :
+                  "bg-accent-500/10 text-accent-600 border-accent-400/25"
                 }`}>
                   {b.status.replace("_", " ")}
                 </span>
@@ -282,11 +282,11 @@ export default function Profile() {
 
       {/* Payment history quick links */}
       <div className="card p-6 animate-fade-up" style={{ animationDelay: "0.16s" }}>
-        <h2 className="text-lg font-semibold text-white mb-5 flex items-center gap-2.5">💳 Payment history</h2>
+        <h2 className="text-lg font-semibold text-slate-900 mb-5 flex items-center gap-2.5">💳 Payment history</h2>
         {payments.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-2xl mb-2 opacity-60">💳</p>
-            <p className="text-sm text-[#8b93a7] mb-3">No payments yet</p>
+            <p className="text-sm text-[#475569] mb-3">No payments yet</p>
             <Link to="/payments" className="btn-ghost inline-flex py-2 px-4 text-xs">View payments</Link>
           </div>
         ) : (
@@ -295,32 +295,32 @@ export default function Profile() {
               <Link
                 key={p._id}
                 to={`/payments/${p._id}`}
-                className="flex items-center justify-between py-3 px-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-accent-400/25 hover:bg-white/[0.04] transition-all animate-fade-in"
+                className="flex items-center justify-between py-3 px-4 rounded-xl bg-white/[0.02] border border-white/[0.05] hover:border-accent-400/25 hover:bg-slate-900/[0.04] transition-all animate-fade-in"
                 style={{ animationDelay: `${i * 0.05}s` }}
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <span className="text-lg shrink-0">{p.status === "success" ? "✅" : p.status === "failed" ? "✕" : "⏳"}</span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-white truncate font-mono">
+                    <p className="text-sm font-medium text-slate-900 truncate font-mono">
                       #{String(p._id).slice(-6).toUpperCase()}
                     </p>
-                    <p className="text-[10px] text-[#5d6577]">
+                    <p className="text-[10px] text-[#64748b]">
                       {new Date(p.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
                     </p>
                   </div>
                 </div>
                 <span className="text-right shrink-0">
-                  <p className="font-semibold text-white">₹{(p.amount || 0).toLocaleString("en-IN")}</p>
+                  <p className="font-semibold text-slate-900">₹{(p.amount || 0).toLocaleString("en-IN")}</p>
                   <span className={`badge text-[10px] py-0.5 ${
-                    p.status === "success" ? "bg-emerald-400/10 text-emerald-300 border-emerald-400/25" :
-                    p.status === "failed" ? "bg-rose-400/10 text-rose-300 border-rose-400/25" :
-                    "bg-amber-400/10 text-amber-300 border-amber-400/25"
+                    p.status === "success" ? "bg-emerald-400/10 text-emerald-700 border-emerald-400/25" :
+                    p.status === "failed" ? "bg-rose-400/10 text-rose-700 border-rose-400/25" :
+                    "bg-amber-400/10 text-amber-700 border-amber-400/25"
                   }`}>{p.status}</span>
                 </span>
               </Link>
             ))}
             {payments.length > 5 && (
-              <Link to="/payments" className="block text-center text-xs text-accent-300 hover:text-white mt-2 font-medium">
+              <Link to="/payments" className="block text-center text-xs text-accent-600 hover:text-slate-900 mt-2 font-medium">
                 View all {payments.length} payments →
               </Link>
             )}

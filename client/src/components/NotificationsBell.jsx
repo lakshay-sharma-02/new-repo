@@ -77,7 +77,7 @@ export default function NotificationsBell() {
           if (open) setOpen(false);
           else { setOpen(true); load(); }
         }}
-        className="relative p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+        className="relative p-2 rounded-lg hover:bg-slate-900/5 transition-colors cursor-pointer"
         aria-label="Notifications"
       >
         <span className="text-base leading-none">🔔</span>
@@ -90,35 +90,35 @@ export default function NotificationsBell() {
 
       {open && (
         <div
-          className="absolute right-0 top-11 w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/60 animate-scale-in z-[95]"
-          style={{ background: "rgba(12,14,22,0.97)" }}
+          className="absolute right-0 top-11 w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl overflow-hidden border border-slate-900/10 shadow-2xl shadow-black/60 animate-scale-in z-[95]"
+          style={{ background: "#ffffff" }}
         >
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
-            <p className="text-sm font-semibold text-white">Notifications</p>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-900/10">
+            <p className="text-sm font-semibold text-slate-900">Notifications</p>
             {unread > 0 && (
-              <button onClick={markAll} className="text-[11px] text-accent-300 hover:text-white font-medium transition-colors cursor-pointer">
+              <button onClick={markAll} className="text-[11px] text-accent-600 hover:text-slate-900 font-medium transition-colors cursor-pointer">
                 Mark all read
               </button>
             )}
           </div>
           <div className="max-h-[380px] overflow-y-auto">
             {items.length === 0 && (
-              <p className="text-xs text-[#5d6577] text-center py-8">Nothing yet — status updates and issue replies land here.</p>
+              <p className="text-xs text-[#64748b] text-center py-8">Nothing yet — status updates and issue replies land here.</p>
             )}
             {items.map((n) => (
               <button
                 key={n._id}
                 onClick={() => openItem(n)}
-                className={`w-full text-left px-4 py-3 border-b border-white/[0.04] hover:bg-white/[0.04] transition-colors cursor-pointer flex gap-3 ${n.read ? "opacity-55" : ""}`}
+                className={`w-full text-left px-4 py-3 border-b border-slate-900/[0.07] hover:bg-slate-900/[0.04] transition-colors cursor-pointer flex gap-3 ${n.read ? "opacity-55" : ""}`}
               >
                 <span className="text-base mt-0.5 shrink-0">{iconFor(n.type)}</span>
                 <span className="flex-1 min-w-0">
                   <span className="flex items-center gap-2">
-                    <span className={`text-[13px] font-semibold truncate ${n.read ? "text-[#b9c0d0]" : "text-white"}`}>{n.title}</span>
+                    <span className={`text-[13px] font-semibold truncate ${n.read ? "text-[#475569]" : "text-slate-900"}`}>{n.title}</span>
                     {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-accent-400 shrink-0 animate-glow" />}
                   </span>
-                  <span className="block text-xs text-[#8b93a7] leading-snug mt-0.5">{n.message}</span>
-                  <span className="block text-[10px] text-[#5d6577] mt-1">{timeAgo(n.createdAt)}</span>
+                  <span className="block text-xs text-[#475569] leading-snug mt-0.5">{n.message}</span>
+                  <span className="block text-[10px] text-[#64748b] mt-1">{timeAgo(n.createdAt)}</span>
                 </span>
               </button>
             ))}

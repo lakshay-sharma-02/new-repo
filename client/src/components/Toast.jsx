@@ -39,17 +39,17 @@ export function ToastProvider({ children }) {
 }
 
 const STYLES = {
-  success: { border: "rgba(52,211,153,0.4)", icon: "✓", tint: "rgba(52,211,153,0.14)", color: "#6ee7b7" },
-  error: { border: "rgba(251,113,133,0.4)", icon: "✕", tint: "rgba(251,113,133,0.14)", color: "#fda4af" },
-  warning: { border: "rgba(251,191,36,0.4)", icon: "⚠", tint: "rgba(251,191,36,0.14)", color: "#fcd34d" },
-  info: { border: "rgba(129,140,248,0.4)", icon: "ℹ", tint: "rgba(129,140,248,0.14)", color: "#a5b4fc" },
+  success: { border: "rgba(52,211,153,0.4)", icon: "✓", tint: "rgba(52,211,153,0.14)", color: "#047857" },
+  error: { border: "rgba(251,113,133,0.4)", icon: "✕", tint: "rgba(251,113,133,0.14)", color: "#be123c" },
+  warning: { border: "rgba(251,191,36,0.4)", icon: "⚠", tint: "rgba(251,191,36,0.14)", color: "#b45309" },
+  info: { border: "rgba(59,130,246,0.4)", icon: "ℹ", tint: "rgba(59,130,246,0.14)", color: "#1d4ed8" },
 };
 
 function ToastItem({ toast }) {
   const s = STYLES[toast.type] || STYLES.info;
   return (
     <div
-      className="pointer-events-auto flex items-center gap-3 pl-3.5 pr-5 py-3 rounded-xl shadow-2xl shadow-black/40 text-sm font-medium backdrop-blur-xl animate-scale-in max-w-sm"
+      className="pointer-events-auto flex items-center gap-3 pl-3.5 pr-5 py-3 rounded-xl shadow-2xl shadow-slate-900/10 text-sm font-medium backdrop-blur-xl animate-scale-in max-w-sm"
       style={{
         background: "rgba(13,15,23,0.85)",
         border: `1px solid ${s.border}`,

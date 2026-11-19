@@ -7,39 +7,39 @@ export default function Footer() {
   const isStaff = user?.role === "staff" || user?.role === "warden";
 
   return (
-    <footer className="mt-16 border-t border-white/[0.06] print:hidden">
+    <footer className="mt-16 border-t border-slate-900/10 print:hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-7 pb-24 sm:pb-16 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2.5">
           <span className="text-lg">🧺</span>
           <div>
-            <p className="text-sm font-semibold text-white/90">
+            <p className="text-sm font-semibold text-slate-800">
               Laundry<span className="grad-text">Roulette</span>
             </p>
-            <p className="text-[11px] text-[#5d6577]">Hostel laundry tracking · capstone demo</p>
+            <p className="text-[11px] text-[#64748b]">Hostel laundry tracking · capstone demo</p>
           </div>
         </div>
 
-        <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-[#8b93a7]">
-          <Link to={isStaff ? "/staff" : "/"} className="hover:text-white transition-colors">
+        <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-[#475569]">
+          <Link to={isStaff ? "/staff" : "/"} className="hover:text-slate-900 transition-colors">
             {isStaff ? "Ops console" : "Dashboard"}
           </Link>
           {!isStaff && (
-            <Link to="/submit" className="hover:text-white transition-colors">
+            <Link to="/submit" className="hover:text-slate-900 transition-colors">
               Submit
             </Link>
           )}
-          <Link to="/reviews" className="hover:text-white transition-colors">
+          <Link to="/reviews" className="hover:text-slate-900 transition-colors">
             Reviews
           </Link>
-          <Link to="/payments" className="hover:text-white transition-colors">
+          <Link to="/payments" className="hover:text-slate-900 transition-colors">
             Payments
           </Link>
-          <Link to="/support" className="hover:text-white transition-colors">
+          <Link to="/support" className="hover:text-slate-900 transition-colors">
             Support
           </Link>
         </nav>
 
-        <p className="text-[11px] text-[#5d6577] text-center sm:text-right">
+        <p className="text-[11px] text-[#64748b] text-center sm:text-right">
           Demo data lives in memory — it resets on server restart
         </p>
       </div>

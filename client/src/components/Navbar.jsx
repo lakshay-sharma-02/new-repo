@@ -4,9 +4,9 @@ import { useAuth } from "../context/AuthContext";
 import NotificationsBell from "./NotificationsBell";
 
 const ROLE_META = {
-  student: { label: "STUDENT", cls: "text-cyan-300 border-cyan-400/25 bg-cyan-400/10" },
-  staff: { label: "STAFF", cls: "text-accent-300 border-accent-400/25 bg-accent-500/10" },
-  warden: { label: "WARDEN", cls: "text-fuchsia-300 border-fuchsia-400/25 bg-fuchsia-500/10" },
+  student: { label: "STUDENT", cls: "text-cyan-700 border-cyan-400/25 bg-cyan-400/10" },
+  staff: { label: "STAFF", cls: "text-accent-600 border-accent-400/25 bg-accent-500/10" },
+  warden: { label: "WARDEN", cls: "text-indigo-700 border-indigo-300 bg-indigo-50" },
 };
 
 export default function Navbar() {
@@ -75,8 +75,8 @@ export default function Navbar() {
         onClick={onClick}
         className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
           active
-            ? "text-white bg-white/[0.08] border border-white/10 shadow-inner"
-            : "text-[#8b93a7] hover:text-white hover:bg-white/[0.04]"
+            ? "text-slate-900 bg-slate-900/[0.07] border border-slate-900/10 shadow-inner"
+            : "text-[#475569] hover:text-slate-900 hover:bg-slate-900/[0.04]"
         }`}
       >
         <span className="mr-1.5 opacity-80">{link.icon}</span>
@@ -88,7 +88,7 @@ export default function Navbar() {
   const roleMeta = ROLE_META[user.role] || ROLE_META.student;
 
   return (
-    <nav className="sticky top-0 z-50 glass-nav border-b border-white/5">
+    <nav className="sticky top-0 z-50 glass-nav border-b border-slate-900/10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -107,7 +107,7 @@ export default function Navbar() {
           {/* Right */}
           <div className="flex items-center gap-2 sm:gap-3">
             {isDemo && (
-              <span className="hidden xl:inline-flex items-center gap-1.5 badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-300 py-1">
+              <span className="hidden xl:inline-flex items-center gap-1.5 badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-700 py-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-glow" />
                 LIVE DEMO
               </span>
@@ -121,43 +121,43 @@ export default function Navbar() {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 aria-haspopup="menu"
                 aria-expanded={dropdownOpen}
-                className="flex items-center gap-2 bg-white/[0.05] border border-white/10 rounded-full px-2 py-1.5 hover:border-accent-400/30 transition-all cursor-pointer"
+                className="flex items-center gap-2 bg-slate-900/[0.04] border border-slate-900/10 rounded-full px-2 py-1.5 hover:border-accent-400/30 transition-all cursor-pointer"
               >
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-400 to-fuchsia-500 flex items-center justify-center text-[11px] font-bold text-white shrink-0">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-400 to-sky-500 flex items-center justify-center text-[11px] font-bold text-white shrink-0">
                   {(user.name || "?")[0].toUpperCase()}
                 </div>
-                <span className="hidden sm:inline text-sm font-medium text-white/85 pr-1 max-w-[9rem] truncate">
+                <span className="hidden sm:inline text-sm font-medium text-slate-700 pr-1 max-w-[9rem] truncate">
                   {user.name}
                 </span>
                 <span className={`inline-flex badge py-0.5 px-1.5 text-[8px] font-bold border ${roleMeta.cls}`}>{roleMeta.label}</span>
-                <span className="text-xs text-[#5d6577] transition-transform" aria-hidden="true">{dropdownOpen ? "▴" : "▾"}</span>
+                <span className="text-xs text-[#64748b] transition-transform" aria-hidden="true">{dropdownOpen ? "▴" : "▾"}</span>
               </button>
 
               {/* Dropdown menu */}
               {dropdownOpen && (
                 <div
-                  className="absolute right-0 top-12 w-48 rounded-xl border border-white/10 shadow-2xl animate-scale-in"
-                  style={{ background: "rgba(12,14,22,0.97)" }}
+                  className="absolute right-0 top-12 w-48 rounded-xl border border-slate-900/10 shadow-2xl animate-scale-in"
+                  style={{ background: "#ffffff" }}
                 >
                   <div className="py-1.5">
                     <Link
                       to="/profile"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#b9c0d0] hover:text-white hover:bg-white/[0.04] transition-all cursor-pointer"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#475569] hover:text-slate-900 hover:bg-slate-900/[0.04] transition-all cursor-pointer"
                     >
                       <span>👤</span> Profile
                     </Link>
                     <Link
                       to="/payments"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#b9c0d0] hover:text-white hover:bg-white/[0.04] transition-all cursor-pointer"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#475569] hover:text-slate-900 hover:bg-slate-900/[0.04] transition-all cursor-pointer"
                     >
                       <span>💳</span> Payment history
                     </Link>
                     <Link
                       to="/reviews"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#b9c0d0] hover:text-white hover:bg-white/[0.04] transition-all cursor-pointer"
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#475569] hover:text-slate-900 hover:bg-slate-900/[0.04] transition-all cursor-pointer"
                     >
                       <span>⭐</span> Write a review
                     </Link>
@@ -165,7 +165,7 @@ export default function Navbar() {
                       <Link
                         to="/admin"
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-fuchsia-300 hover:text-white hover:bg-fuchsia-500/10 transition-all cursor-pointer border-t border-white/[0.06] mt-1.5 pt-2.5"
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-indigo-700 hover:text-slate-900 hover:bg-indigo-100 transition-all cursor-pointer border-t border-slate-900/10 mt-1.5 pt-2.5"
                       >
                         <span>🛠️</span> Admin panel
                       </Link>
@@ -175,7 +175,7 @@ export default function Navbar() {
                         logout();
                         setDropdownOpen(false);
                       }}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-rose-300 hover:text-rose-200 hover:bg-rose-500/10 transition-all cursor-pointer border-t border-white/[0.06] mt-1.5 pt-2.5 text-left"
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-rose-700 hover:text-rose-700 hover:bg-rose-500/10 transition-all cursor-pointer border-t border-slate-900/10 mt-1.5 pt-2.5 text-left"
                     >
                       <span>→</span> Log out
                     </button>
@@ -187,14 +187,14 @@ export default function Navbar() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+              className="md:hidden p-2 rounded-lg hover:bg-slate-900/5 transition-colors cursor-pointer"
               aria-label="Toggle menu"
               aria-expanded={mobileOpen}
             >
               <div className="w-5 h-4 flex flex-col justify-between">
-                <span className={`w-full h-0.5 bg-white/70 rounded-full transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[7px]" : ""}`} />
-                <span className={`w-full h-0.5 bg-white/70 rounded-full transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`} />
-                <span className={`w-full h-0.5 bg-white/70 rounded-full transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""}`} />
+                <span className={`w-full h-0.5 bg-slate-700 rounded-full transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[7px]" : ""}`} />
+                <span className={`w-full h-0.5 bg-slate-700 rounded-full transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`} />
+                <span className={`w-full h-0.5 bg-slate-700 rounded-full transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-[7px]" : ""}`} />
               </div>
             </button>
           </div>
@@ -203,14 +203,14 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-white/5 animate-fade-in">
-          <div className="px-4 py-3 space-y-1 bg-[#07080d]/95 backdrop-blur-xl">
+        <div className="md:hidden border-t border-slate-900/10 animate-fade-in">
+          <div className="px-4 py-3 space-y-1 bg-white/95 backdrop-blur-xl">
             {mobileLinks.map((l) => navItem(l, () => setMobileOpen(false)))}
-            <div className="flex items-center gap-2 pt-3 mt-2 px-3 border-t border-white/[0.06]">
+            <div className="flex items-center gap-2 pt-3 mt-2 px-3 border-t border-slate-900/10">
               <span className={`badge py-0.5 px-2 text-[9px] font-bold border ${roleMeta.cls}`}>{roleMeta.label}</span>
-              <span className="text-xs text-[#8b93a7] truncate">{user.name}</span>
+              <span className="text-xs text-[#475569] truncate">{user.name}</span>
               {user.hostelBlock && (
-                <span className="text-[10px] text-[#5d6577]">· block {user.hostelBlock}</span>
+                <span className="text-[10px] text-[#64748b]">· block {user.hostelBlock}</span>
               )}
             </div>
           </div>

@@ -70,22 +70,22 @@ export default function Support() {
 
       {/* FAQ section */}
       <div className="mb-12 animate-fade-up" style={{ animationDelay: "0.06s" }}>
-        <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2.5">
+        <h2 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2.5">
           <span>❓</span> Frequently asked questions
         </h2>
         <div className="space-y-3">
           {FAQS.map((faq, i) => (
             <details
               key={i}
-              className="card p-5 open:bg-white/[0.04] transition-all animate-fade-up"
+              className="card p-5 open:bg-slate-900/[0.04] transition-all animate-fade-up"
               style={{ animationDelay: `${i * 0.04}s` }}
             >
               <summary className="cursor-pointer list-none flex items-center gap-2.5">
-                <span className="text-accent-300">{i + 1}</span>
-                <span className="font-semibold text-white flex-1">{faq.q}</span>
-                <span className="text-[#5d6577] transition-transform text-sm">▸</span>
+                <span className="text-accent-600">{i + 1}</span>
+                <span className="font-semibold text-slate-900 flex-1">{faq.q}</span>
+                <span className="text-[#64748b] transition-transform text-sm">▸</span>
               </summary>
-              <p className="text-sm text-[#b9c0d0] mt-3 leading-relaxed ml-6">{faq.a}</p>
+              <p className="text-sm text-[#475569] mt-3 leading-relaxed ml-6">{faq.a}</p>
             </details>
           ))}
         </div>
@@ -93,17 +93,17 @@ export default function Support() {
 
       {/* Contact form */}
       <div className="card p-8 animate-fade-up" style={{ animationDelay: "0.12s" }}>
-        <h2 className="text-xl font-bold text-white mb-2 flex items-center gap-2.5">
+        <h2 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2.5">
           <span>📧</span> Contact us
         </h2>
-        <p className="text-sm text-[#8b93a7] mb-6">
-          Fill out the form below and we'll respond within 24 hours. Or email <span className="text-accent-300">support@hostel.edu</span> directly.
+        <p className="text-sm text-[#475569] mb-6">
+          Fill out the form below and we'll respond within 24 hours. Or email <span className="text-accent-600">support@hostel.edu</span> directly.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Name</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">Name</label>
               <input
                 className="field"
                 value={form.name}
@@ -114,7 +114,7 @@ export default function Support() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Email</label>
+              <label className="block text-sm font-medium text-[#475569] mb-2">Email</label>
               <input
                 type="email"
                 className="field"
@@ -128,7 +128,7 @@ export default function Support() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Subject</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">Subject</label>
             <input
               className="field"
               value={form.subject}
@@ -139,7 +139,7 @@ export default function Support() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#b9c0d0] mb-2">Message</label>
+            <label className="block text-sm font-medium text-[#475569] mb-2">Message</label>
             <textarea
               rows={5}
               className="field resize-none leading-relaxed"
@@ -163,7 +163,7 @@ export default function Support() {
 
       {/* Knowledge base links */}
       <div className="mt-12 animate-fade-up" style={{ animationDelay: "0.18s" }}>
-        <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2.5">
+        <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2.5">
           <span>📚</span> Knowledge base
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -180,11 +180,11 @@ export default function Support() {
               to={kb.href}
               className="card card-hover p-5 block transition-all group"
             >
-              <h3 className="text-sm font-semibold text-white mb-1.5 flex items-center justify-between gap-2">
+              <h3 className="text-sm font-semibold text-slate-900 mb-1.5 flex items-center justify-between gap-2">
                 {kb.title}
-                <span className="text-accent-300 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                <span className="text-accent-600 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
               </h3>
-              <p className="text-xs text-[#8b93a7] leading-relaxed">{kb.desc}</p>
+              <p className="text-xs text-[#475569] leading-relaxed">{kb.desc}</p>
             </Link>
           ))}
         </div>

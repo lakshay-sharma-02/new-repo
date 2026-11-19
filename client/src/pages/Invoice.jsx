@@ -5,10 +5,10 @@ import { useToast } from "../components/Toast";
 import PageHeader from "../components/PageHeader";
 
 const STATUS_BADGE = {
-  success: { cls: "bg-emerald-400/10 border-emerald-400/25 text-emerald-300", icon: "✅" },
-  pending: { cls: "bg-amber-400/10 border-amber-400/25 text-amber-300", icon: "⏳" },
-  failed: { cls: "bg-rose-400/10 border-rose-400/25 text-rose-300", icon: "✕" },
-  refunded: { cls: "bg-slate-400/10 border-slate-400/25 text-slate-400", icon: "↩" },
+  success: { cls: "bg-emerald-400/10 border-emerald-400/25 text-emerald-700", icon: "✅" },
+  pending: { cls: "bg-amber-400/10 border-amber-400/25 text-amber-700", icon: "⏳" },
+  failed: { cls: "bg-rose-400/10 border-rose-400/25 text-rose-700", icon: "✕" },
+  refunded: { cls: "bg-slate-400/10 border-slate-400/25 text-slate-600", icon: "↩" },
 };
 
 export default function Invoice() {
@@ -49,7 +49,7 @@ export default function Invoice() {
         .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .logo { font-size: 28px; font-weight: bold; }
-        .grad { color: #6366f1; }
+        .grad { color: #2563eb; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
         th { color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase; }
@@ -134,7 +134,7 @@ export default function Invoice() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      <Link to="/payments" className="inline-flex items-center gap-1.5 text-sm text-[#8b93a7] hover:text-white transition-colors mb-6 font-medium">
+      <Link to="/payments" className="inline-flex items-center gap-1.5 text-sm text-[#475569] hover:text-slate-900 transition-colors mb-6 font-medium">
         ← Payment history
       </Link>
 
@@ -154,20 +154,20 @@ export default function Invoice() {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <span className="text-3xl">🧺</span>
-            <span className="text-xl font-bold text-white">Laundry<span className="grad-text">Roulette</span></span>
+            <span className="text-xl font-bold text-slate-900">Laundry<span className="grad-text">Roulette</span></span>
           </div>
           <div className="text-right">
             <span className={`badge ${sb.cls}`}>{sb.icon} {invoice.paymentStatus.replace("_", " ")}</span>
-            <p className="text-sm font-mono text-[#5d6577] mt-1.5">{invoice.invoiceNumber}</p>
+            <p className="text-sm font-mono text-[#64748b] mt-1.5">{invoice.invoiceNumber}</p>
           </div>
         </div>
 
         {/* Bill to */}
         <div className="mb-6">
-          <p className="text-[10px] uppercase tracking-wider text-[#5d6577] font-semibold mb-2">Bill to</p>
-          <p className="font-semibold text-white">{invoice.studentName}</p>
-          <p className="text-sm text-[#5d6577]">{invoice.studentEmail}</p>
-          <p className="text-sm text-[#5d6577]">Block: {invoice.block}</p>
+          <p className="text-[10px] uppercase tracking-wider text-[#64748b] font-semibold mb-2">Bill to</p>
+          <p className="font-semibold text-slate-900">{invoice.studentName}</p>
+          <p className="text-sm text-[#64748b]">{invoice.studentEmail}</p>
+          <p className="text-sm text-[#64748b]">Block: {invoice.block}</p>
         </div>
 
         {/* Items */}
@@ -175,41 +175,41 @@ export default function Invoice() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/[0.06]">
-                  <th className="text-left py-2 text-[10px] uppercase tracking-wider text-[#5d6577] font-semibold">Qty</th>
-                  <th className="text-left py-2 text-[10px] uppercase tracking-wider text-[#5d6577] font-semibold">Type</th>
-                  <th className="text-right py-2 text-[10px] uppercase tracking-wider text-[#5d6577] font-semibold">Rate</th>
-                  <th className="text-right py-2 text-[10px] uppercase tracking-wider text-[#5d6577] font-semibold">Amount</th>
+                <tr className="border-b border-slate-900/10">
+                  <th className="text-left py-2 text-[10px] uppercase tracking-wider text-[#64748b] font-semibold">Qty</th>
+                  <th className="text-left py-2 text-[10px] uppercase tracking-wider text-[#64748b] font-semibold">Type</th>
+                  <th className="text-right py-2 text-[10px] uppercase tracking-wider text-[#64748b] font-semibold">Rate</th>
+                  <th className="text-right py-2 text-[10px] uppercase tracking-wider text-[#64748b] font-semibold">Amount</th>
                 </tr>
               </thead>
               <tbody>
                 {(invoice.items || []).map((it, i) => (
-                  <tr key={i} className="border-b border-white/[0.04]">
-                    <td className="py-2 text-sm text-[#b9c0d0]">{it.count}</td>
-                    <td className="py-2 text-sm text-white capitalize">{it.type}</td>
-                    <td className="py-2 text-right text-sm text-[#b9c0d0]">₹{it.price}</td>
-                    <td className="py-2 text-right text-sm text-white">₹{(it.price * it.count).toFixed(2)}</td>
+                  <tr key={i} className="border-b border-slate-900/[0.07]">
+                    <td className="py-2 text-sm text-[#475569]">{it.count}</td>
+                    <td className="py-2 text-sm text-slate-900 capitalize">{it.type}</td>
+                    <td className="py-2 text-right text-sm text-[#475569]">₹{it.price}</td>
+                    <td className="py-2 text-right text-sm text-slate-900">₹{(it.price * it.count).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t border-white/[0.08]">
-                  <td colSpan={3} className="py-2 text-sm text-[#8b93a7]">Subtotal</td>
-                  <td className="py-2 text-right text-sm text-white">₹{invoice.pricing.subtotal.toFixed(2)}</td>
+                <tr className="border-t border-slate-900/15">
+                  <td colSpan={3} className="py-2 text-sm text-[#475569]">Subtotal</td>
+                  <td className="py-2 text-right text-sm text-slate-900">₹{invoice.pricing.subtotal.toFixed(2)}</td>
                 </tr>
                 {invoice.pricing.couponCode && (
-                  <tr className="border-b border-white/[0.04]">
-                    <td colSpan={3} className="py-2 text-sm text-emerald-300">Discount ({invoice.pricing.couponCode})</td>
-                    <td className="py-2 text-right text-sm text-emerald-300">-₹{invoice.pricing.discount.toFixed(2)}</td>
+                  <tr className="border-b border-slate-900/[0.07]">
+                    <td colSpan={3} className="py-2 text-sm text-emerald-700">Discount ({invoice.pricing.couponCode})</td>
+                    <td className="py-2 text-right text-sm text-emerald-700">-₹{invoice.pricing.discount.toFixed(2)}</td>
                   </tr>
                 )}
-                <tr className="border-b border-white/[0.04]">
-                  <td colSpan={3} className="py-2 text-sm text-[#8b93a7]">Tax (5%)</td>
-                  <td className="py-2 text-right text-sm text-white">₹{invoice.pricing.tax.toFixed(2)}</td>
+                <tr className="border-b border-slate-900/[0.07]">
+                  <td colSpan={3} className="py-2 text-sm text-[#475569]">Tax (5%)</td>
+                  <td className="py-2 text-right text-sm text-slate-900">₹{invoice.pricing.tax.toFixed(2)}</td>
                 </tr>
                 <tr className="font-bold">
-                  <td colSpan={3} className="py-3 text-white">Total</td>
-                  <td className="py-3 text-right text-xl text-white">₹{invoice.pricing.total.toFixed(2)}</td>
+                  <td colSpan={3} className="py-3 text-slate-900">Total</td>
+                  <td className="py-3 text-right text-xl text-slate-900">₹{invoice.pricing.total.toFixed(2)}</td>
                 </tr>
               </tfoot>
             </table>
@@ -218,56 +218,56 @@ export default function Invoice() {
 
         {/* Batch details */}
         <div className="mb-6">
-          <p className="text-[10px] uppercase tracking-wider text-[#5d6577] font-semibold mb-2">Batch details</p>
+          <p className="text-[10px] uppercase tracking-wider text-[#64748b] font-semibold mb-2">Batch details</p>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
-              <span className="text-[#5d6577]">Invoice #</span>
-              <span className="text-white font-mono ml-2">{invoice.invoiceNumber}</span>
+              <span className="text-[#64748b]">Invoice #</span>
+              <span className="text-slate-900 font-mono ml-2">{invoice.invoiceNumber}</span>
             </div>
             <div>
-              <span className="text-[#5d6577]">Status</span>
-              <span className="text-white ml-2 capitalize">{invoice.batchDetails.status}</span>
+              <span className="text-[#64748b]">Status</span>
+              <span className="text-slate-900 ml-2 capitalize">{invoice.batchDetails.status}</span>
             </div>
             <div>
-              <span className="text-[#5d6577]">Items</span>
-              <span className="text-white ml-2">{invoice.batchDetails.description}</span>
+              <span className="text-[#64748b]">Items</span>
+              <span className="text-slate-900 ml-2">{invoice.batchDetails.description}</span>
             </div>
             <div>
-              <span className="text-[#5d6577]">Size</span>
-              <span className="text-white ml-2 capitalize">{invoice.batchDetails.itemEstimate}</span>
+              <span className="text-[#64748b]">Size</span>
+              <span className="text-slate-900 ml-2 capitalize">{invoice.batchDetails.itemEstimate}</span>
             </div>
             <div>
-              <span className="text-[#5d6577]">Submitted</span>
-              <span className="text-white ml-2">{new Date(invoice.batchDetails.submittedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</span>
+              <span className="text-[#64748b]">Submitted</span>
+              <span className="text-slate-900 ml-2">{new Date(invoice.batchDetails.submittedAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}</span>
             </div>
             <div>
-              <span className="text-[#5d6577]">Payment method</span>
-              <span className="text-white ml-2 capitalize">{invoice.method || "upi"}</span>
+              <span className="text-[#64748b]">Payment method</span>
+              <span className="text-slate-900 ml-2 capitalize">{invoice.method || "upi"}</span>
             </div>
           </div>
         </div>
 
         {/* QR code area */}
-        <div className="flex items-center justify-between pt-6 border-t border-white/[0.06] print:hidden">
+        <div className="flex items-center justify-between pt-6 border-t border-slate-900/10 print:hidden">
           <div>
-            <p className="text-[11px] text-[#5d6577] mb-2">Transaction reference</p>
-            <p className="font-mono text-xs text-white">{invoice.transactionRef || "—"}</p>
+            <p className="text-[11px] text-[#64748b] mb-2">Transaction reference</p>
+            <p className="font-mono text-xs text-slate-900">{invoice.transactionRef || "—"}</p>
           </div>
           <div className="text-center">
-            <div className="w-28 h-28 mx-auto rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center mb-2">
+            <div className="w-28 h-28 mx-auto rounded-xl bg-slate-900/[0.03] border border-slate-900/10 flex items-center justify-center mb-2">
               <div className="text-center">
                 <span className="text-3xl mb-1 block">📱</span>
-                <p className="font-mono text-[8px] text-[#5d6577] leading-tight break-all">{qrData}</p>
+                <p className="font-mono text-[8px] text-[#64748b] leading-tight break-all">{qrData}</p>
               </div>
             </div>
-            <p className="text-[10px] text-[#5d6577]">Invoice QR</p>
+            <p className="text-[10px] text-[#64748b]">Invoice QR</p>
           </div>
         </div>
 
-        <div className="pt-6 border-t border-white/[0.06] text-center print:hidden">
-          <p className="text-xs text-[#5d6577]">
+        <div className="pt-6 border-t border-slate-900/10 text-center print:hidden">
+          <p className="text-xs text-[#64748b]">
             Thank you for using Laundry Roulette!<br />
-            <span className="text-[#8b93a7]">Invoice issued on {new Date(invoice.createdAt).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</span>
+            <span className="text-[#475569]">Invoice issued on {new Date(invoice.createdAt).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</span>
           </p>
         </div>
       </div>

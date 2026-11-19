@@ -25,18 +25,18 @@ export default function PageHeader({
         {(icon || eyebrow) && (
           <div className={`flex items-center gap-3 mb-3 ${centered ? "justify-center" : ""}`}>
             {icon && (
-              <span className="inline-flex w-11 h-11 rounded-2xl bg-white/[0.05] border border-white/10 items-center justify-center text-xl shrink-0">
+              <span className="inline-flex w-11 h-11 rounded-2xl bg-slate-900/[0.04] border border-slate-900/10 items-center justify-center text-xl shrink-0">
                 {icon}
               </span>
             )}
             {eyebrow && (
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-300">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-accent-600">
                 {eyebrow}
               </p>
             )}
           </div>
         )}
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
           {title}
         </h1>
         {subtitle && (
