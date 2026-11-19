@@ -1,16 +1,49 @@
-# React + Vite
+# Laundry Roulette — Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React 19 + Vite frontend for **Laundry Roulette**, a hostel laundry tracking and
+accountability system. See the [root README](../README.md) for the product story,
+research, and architecture.
 
-Currently, two official plugins are available:
+## Running
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The client expects the API on `http://localhost:5000` (proxied via `/api`), so start
+the server first:
 
-## React Compiler
+```bash
+cd ../server && npm install && npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Then, in this directory:
 
-## Expanding the Oxlint configuration
+```bash
+npm install
+npm run dev        # http://localhost:5173
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Log in with any seeded demo account, e.g. `aarav@hostel.edu` / `demo123`.
+
+## Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Vite dev server with HMR and `/api` proxy |
+| `npm run build` | Production build to `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm test` | Run the Vitest smoke tests |
+| `npm run lint` | Lint with Oxlint |
+
+## Layout
+
+```
+src/
+├── components/   # Navbar, StatusTracker, DemoSimulator, NotificationsBell, Toast
+├── context/      # Auth context + provider
+├── lib/          # Axios client with JWT interceptor
+├── pages/        # Route pages (student, staff, warden)
+├── App.jsx       # Role-based routing
+└── index.css     # Tailwind base + design system
+```
+
+Styling is Tailwind CSS v4 with a dark design system defined in `src/index.css`;
+reusable classes (`card`, `btn-primary`, `field`, `badge`) live there rather than
+being repeated per component.

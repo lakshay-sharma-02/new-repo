@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../lib/api";
 import { useToast } from "../components/Toast";
 import { useAuth } from "../context/AuthContext";
+import PageHeader from "../components/PageHeader";
 
 const FAQS = [
   {
@@ -58,13 +59,14 @@ export default function Support() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
       {/* Header */}
-      <div className="text-center mb-12 animate-fade-up">
-        <span className="text-4xl mb-4 block">💬</span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">Support center</h1>
-        <p className="muted mt-3 max-w-xl mx-auto">
-          Got a question? Need help with a batch? We're here to help — whether it's about tracking, pricing, or a service issue.
-        </p>
-      </div>
+      <PageHeader
+        align="center"
+        icon="💬"
+        eyebrow="Help & contact"
+        title="Support center"
+        subtitle="Got a question? Need help with a batch? We're here — whether it's about tracking, pricing, or a service issue."
+        className="mb-12"
+      />
 
       {/* FAQ section */}
       <div className="mb-12 animate-fade-up" style={{ animationDelay: "0.06s" }}>
@@ -166,20 +168,22 @@ export default function Support() {
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { title: "How to book laundry", href: "#", desc: "Step-by-step guide to submitting your first batch" },
-            { title: "Understanding the tracker", href: "#", desc: "What each status stage means" },
-            { title: "Coupon & discount guide", href: "#", desc: "How to use promo codes" },
-            { title: "Reporting issues", href: "#", desc: "What to do when something goes wrong" },
-            { title: "Payment & invoices", href: "#", desc: "How payments work and how to get receipts" },
+            { title: "How to submit laundry", href: "/submit", desc: "Step-by-step guide to logging your first batch" },
+            { title: "Understanding the tracker", href: "/", desc: "What each status stage means" },
+            { title: "Coupon & discount guide", href: "/submit", desc: "How to use promo codes at checkout" },
+            { title: "Reporting issues", href: "/", desc: "What to do when something goes wrong" },
+            { title: "Payment & invoices", href: "/payments", desc: "How payments work and how to get receipts" },
             { title: "Account settings", href: "/profile", desc: "Manage your profile and preferences" },
           ].map((kb) => (
             <Link
               key={kb.title}
-              to={kb.href === "#" ? "#" : kb.href}
-              onClick={(e) => { kb.href === "#" && e.preventDefault(); }}
-              className="card card-hover p-5 block transition-all"
+              to={kb.href}
+              className="card card-hover p-5 block transition-all group"
             >
-              <h3 className="text-sm font-semibold text-white mb-1.5">{kb.title}</h3>
+              <h3 className="text-sm font-semibold text-white mb-1.5 flex items-center justify-between gap-2">
+                {kb.title}
+                <span className="text-accent-300 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+              </h3>
               <p className="text-xs text-[#8b93a7] leading-relaxed">{kb.desc}</p>
             </Link>
           ))}

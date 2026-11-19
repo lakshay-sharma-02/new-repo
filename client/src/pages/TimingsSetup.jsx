@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import { useToast } from "../components/Toast";
 import { useAuth } from "../context/AuthContext";
+import PageHeader from "../components/PageHeader";
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -131,10 +132,11 @@ export default function TimingsSetup() {
   if (!isStaff) {
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
-        <div className="mb-8 animate-fade-up">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">Your block's laundry schedule</h1>
-          <p className="muted mt-2">Published by the laundry service — submissions open on these days.</p>
-        </div>
+        <PageHeader
+          eyebrow={`Block ${user?.hostelBlock || "—"}`}
+          title="Your block's laundry schedule"
+          subtitle="Published by the laundry service — submissions open on these days."
+        />
         {!readOnly ? (
           <div className="card p-10 text-center">
             <p className="text-4xl mb-4">🗓️</p>
@@ -182,14 +184,15 @@ export default function TimingsSetup() {
   /* ----- Staff / warden: schedule publisher ----- */
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-8 animate-fade-up">
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">Publish block schedule</h1>
-        <p className="muted mt-2">
-          {isWarden
+      <PageHeader
+        eyebrow={isWarden ? "Warden" : `Block ${user?.hostelBlock || "—"}`}
+        title="Publish block schedule"
+        subtitle={
+          isWarden
             ? "Pick a block and set its laundry days, windows, and turnaround. Publishing unlocks submissions for that block."
-            : "This is the schedule your block runs on — students see it and submit only on these days."}
-        </p>
-      </div>
+            : "This is the schedule your block runs on — students see it and submit only on these days."
+        }
+      />
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (

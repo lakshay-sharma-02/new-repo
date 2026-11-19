@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import { useToast } from "../components/Toast";
 import { useAuth } from "../context/AuthContext";
+import PageHeader from "../components/PageHeader";
 
 const STATUS_BADGE = {
   success: { cls: "bg-emerald-400/10 border-emerald-400/25 text-emerald-300", icon: "✅" },
@@ -57,13 +58,14 @@ export default function Payments() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 animate-fade-up">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">Payment history</h1>
-          <p className="muted mt-2">Track every charge, download invoices, and review past payments.</p>
-        </div>
-        <Link to="/submit" className="btn-ghost py-2.5 px-5 text-[13px]">← Submit new batch</Link>
-      </div>
+      <PageHeader
+        eyebrow="Billing"
+        title="Payment history"
+        subtitle="Every charge, invoice, and refund in one place."
+        actions={
+          <Link to="/submit" className="btn-ghost py-2.5 px-5 text-[13px]">← Submit new batch</Link>
+        }
+      />
 
       {/* Summary cards */}
       <div className="grid sm:grid-cols-3 gap-4 mb-8">
@@ -120,8 +122,8 @@ export default function Payments() {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-sm">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm min-w-0">
                     <span className="flex items-center gap-1.5 text-xs text-[#8b93a7]">
                       {METHOD_ICON[p.method] || "💳"} {p.method || "upi"}
                     </span>
@@ -129,10 +131,10 @@ export default function Payments() {
                       <span className="text-xs text-[#5d6577] truncate max-w-[180px]">• {p.batchInfo.description}</span>
                     )}
                     {p.transactionRef && (
-                      <span className="font-mono text-[10px] text-[#5d6577]">ref: {p.transactionRef}</span>
+                      <span className="hidden sm:inline font-mono text-[10px] text-[#5d6577]">ref: {p.transactionRef}</span>
                     )}
                   </div>
-                  <span className="text-xs font-medium text-accent-300">View invoice →</span>
+                  <span className="text-xs font-medium text-accent-300 shrink-0">View invoice →</span>
                 </div>
               </Link>
             );

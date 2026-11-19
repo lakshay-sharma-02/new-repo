@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import { useToast } from "../components/Toast";
+import PageHeader from "../components/PageHeader";
 
 const SIZES = [
   { value: "small", label: "Small", hint: "1–5 items", icon: "🎒" },
@@ -129,7 +130,7 @@ export default function SubmitLaundry() {
 
   if (!timings) {
     return (
-      <div className="max-w-2xl mx-auto px-6 py-16">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
         <div className="card p-10 text-center animate-scale-in">
           <p className="text-4xl mb-4">🗓️</p>
           <p className="text-lg font-semibold text-white">No schedule published yet</p>
@@ -145,10 +146,11 @@ export default function SubmitLaundry() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
-      <div className="mb-8 animate-fade-up">
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">Submit laundry</h1>
-        <p className="muted mt-2">Dropping clothes off? Log it — you'll get a live tracker + ETA.</p>
-      </div>
+      <PageHeader
+        eyebrow="New batch"
+        title="Submit laundry"
+        subtitle="Dropping clothes off? Log it — you'll get a live tracker, an ETA, and a payment record."
+      />
 
       <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
         {error && (

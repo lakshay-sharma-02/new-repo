@@ -1,7 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ToastProvider } from "./components/Toast";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import NotFound from "./pages/NotFound";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -65,8 +68,44 @@ function Home() {
   return user.role === "student" ? <Dashboard /> : <Navigate to="/staff" replace />;
 }
 
+const TITLES = {
+  "/login": "Sign in",
+  "/register": "Create account",
+  "/forgot-password": "Reset your password",
+  "/reset-password": "Choose a new password",
+  "/staff": "Ops console",
+  "/timings": "Block schedules",
+  "/submit": "Submit laundry",
+  "/payments": "Payment history",
+  "/reviews": "Student reviews",
+  "/profile": "Profile",
+  "/support": "Support",
+  "/admin": "Admin panel",
+};
+
+function titleFor(pathname, user) {
+  if (pathname.startsWith("/track/")) return "Track batch";
+  if (pathname.startsWith("/report/")) return "Report an issue";
+  if (pathname.startsWith("/payments/")) return "Invoice";
+  if (pathname === "/") {
+    if (!user) return "Track your hostel laundry";
+    return user.role === "student" ? "Dashboard" : "Ops console";
+  }
+  return TITLES[pathname] || "Page not found";
+}
+
 function Shell() {
   const { user, loading } = useAuth();
+  const location = useLocation();
+
+  // Reset scroll and keep the browser tab in sync with the current page.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    document.title = `${titleFor(location.pathname, user)} · Laundry Roulette`;
+  }, [location.pathname, user]);
 
   return (
     <div className="min-h-screen">
@@ -176,9 +215,10 @@ function Shell() {
             }
           />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       )}
+      {user && !loading && <Footer />}
       {/* Live-demo driver widget — students only; staff drive the real console */}
       {user && user.role === "student" && <DemoSimulator />}
 

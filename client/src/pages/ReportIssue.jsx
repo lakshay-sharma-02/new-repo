@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import api from "../lib/api";
 import { useToast } from "../components/Toast";
+import PageHeader from "../components/PageHeader";
 
 const QUICK = [
   "Item missing from my bag",
@@ -44,11 +45,12 @@ export default function ReportIssue() {
         ← Back to batch
       </Link>
 
-      <div className="mb-8 animate-fade-up">
-        <div className="inline-flex w-14 h-14 rounded-2xl bg-rose-400/10 border border-rose-400/25 items-center justify-center text-2xl mb-5">⚠️</div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">Report an issue</h1>
-        <p className="muted mt-2">The report is linked to your batch ID, so there's a real record — no more memory-vs-memory.</p>
-      </div>
+      <PageHeader
+        icon="⚠️"
+        eyebrow={`Batch #${String(id || "").slice(-8).toUpperCase()}`}
+        title="Report an issue"
+        subtitle="The report is linked to your batch ID, so there's a real record — no more memory-vs-memory."
+      />
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (

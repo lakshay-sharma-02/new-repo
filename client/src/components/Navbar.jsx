@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import NotificationsBell from "./NotificationsBell";
 
@@ -12,10 +12,36 @@ const ROLE_META = {
 export default function Navbar() {
   const { user, logout } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  // Close the menus whenever the route changes.
+  useEffect(() => {
+    setMobileOpen(false);
+    setDropdownOpen(false);
+  }, [location.pathname]);
+
+  // Close on Escape and on a click outside the profile dropdown.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        setDropdownOpen(false);
+      }
+    };
+    const onPointer = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onPointer);
+    };
+  }, []);
 
   if (!user) return null;
   const isDemo = /@hostel\.edu/.test(user.email || "");
@@ -30,6 +56,14 @@ export default function Navbar() {
         { to: "/", label: "Dashboard", icon: "📊" },
         { to: "/submit", label: "Submit", icon: "➕" },
       ];
+
+  const mobileLinks = [
+    ...links,
+    { to: "/payments", label: "Payments", icon: "💳" },
+    { to: "/reviews", label: "Reviews", icon: "⭐" },
+    { to: "/profile", label: "Profile", icon: "👤" },
+    { to: "/support", label: "Support", icon: "💬" },
+  ];
 
   const navItem = (link, onClick) => {
     const active =
@@ -85,14 +119,18 @@ export default function Navbar() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
+                aria-haspopup="menu"
+                aria-expanded={dropdownOpen}
                 className="flex items-center gap-2 bg-white/[0.05] border border-white/10 rounded-full px-2 py-1.5 hover:border-accent-400/30 transition-all cursor-pointer"
               >
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-400 to-fuchsia-500 flex items-center justify-center text-[11px] font-bold text-white">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-400 to-fuchsia-500 flex items-center justify-center text-[11px] font-bold text-white shrink-0">
                   {(user.name || "?")[0].toUpperCase()}
                 </div>
-                <span className="text-sm font-medium text-white/85 pr-1">{user.name}</span>
-                <span className={`badge py-0.5 px-1.5 text-[8px] font-bold border ${roleMeta.cls}`}>{roleMeta.label}</span>
-                <span className="text-xs text-[#5d6577] transition-transform">{dropdownOpen ? "▴" : "▾"}</span>
+                <span className="hidden sm:inline text-sm font-medium text-white/85 pr-1 max-w-[9rem] truncate">
+                  {user.name}
+                </span>
+                <span className={`inline-flex badge py-0.5 px-1.5 text-[8px] font-bold border ${roleMeta.cls}`}>{roleMeta.label}</span>
+                <span className="text-xs text-[#5d6577] transition-transform" aria-hidden="true">{dropdownOpen ? "▴" : "▾"}</span>
               </button>
 
               {/* Dropdown menu */}
@@ -151,6 +189,7 @@ export default function Navbar() {
               onClick={() => setMobileOpen(!mobileOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
               aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
             >
               <div className="w-5 h-4 flex flex-col justify-between">
                 <span className={`w-full h-0.5 bg-white/70 rounded-full transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-[7px]" : ""}`} />
@@ -165,11 +204,14 @@ export default function Navbar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-white/5 animate-fade-in">
-          <div className="px-4 py-3 space-y-1 bg-[#07080d]/90 backdrop-blur-xl">
-            {links.map((l) => navItem(l, () => setMobileOpen(false)))}
-            <div className="flex items-center gap-2 pt-2 px-3">
+          <div className="px-4 py-3 space-y-1 bg-[#07080d]/95 backdrop-blur-xl">
+            {mobileLinks.map((l) => navItem(l, () => setMobileOpen(false)))}
+            <div className="flex items-center gap-2 pt-3 mt-2 px-3 border-t border-white/[0.06]">
               <span className={`badge py-0.5 px-2 text-[9px] font-bold border ${roleMeta.cls}`}>{roleMeta.label}</span>
-              <span className="text-xs text-[#8b93a7]">{user.name}</span>
+              <span className="text-xs text-[#8b93a7] truncate">{user.name}</span>
+              {user.hostelBlock && (
+                <span className="text-[10px] text-[#5d6577]">· block {user.hostelBlock}</span>
+              )}
             </div>
           </div>
         </div>

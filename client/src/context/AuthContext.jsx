@@ -3,6 +3,26 @@ import api, { setAccessToken } from "../lib/api";
 
 const AuthContext = createContext(null);
 
+// The refresh endpoint rotates the refresh cookie and rejects a reused one.
+// Coalesce concurrent refresh calls (React StrictMode mounts effects twice in
+// development) so the second call can't invalidate the session the first gets.
+let sessionRequest = null;
+
+function loadSession() {
+  if (!sessionRequest) {
+    sessionRequest = api
+      .post("/auth/refresh")
+      .then((res) => {
+        setAccessToken(res.data.accessToken);
+        return res.data.user;
+      })
+      .finally(() => {
+        sessionRequest = null;
+      });
+  }
+  return sessionRequest;
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,12 +35,9 @@ export function AuthProvider({ children }) {
     const onExpired = () => setUser(null);
     window.addEventListener("auth:expired", onExpired);
 
-    api
-      .post("/auth/refresh")
-      .then((res) => {
-        if (cancelled) return;
-        setAccessToken(res.data.accessToken);
-        setUser(res.data.user);
+    loadSession()
+      .then((sessionUser) => {
+        if (!cancelled) setUser(sessionUser);
       })
       .catch(() => {
         if (!cancelled) setUser(null);

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import { useToast } from "../components/Toast";
 import { useAuth } from "../context/AuthContext";
+import PageHeader from "../components/PageHeader";
 
 const ROLE_LABELS = {
   student: "Student",
@@ -128,15 +129,16 @@ export default function Profile() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-      <div className="flex items-end justify-between mb-8 animate-fade-up">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">Profile</h1>
-          <p className="muted mt-2">Manage your account details, password, and review your activity.</p>
-        </div>
-        <button onClick={logout} className="btn-ghost py-2 px-4 text-xs text-rose-300 border-rose-400/25 hover:bg-rose-500/10">
-          Log out
-        </button>
-      </div>
+      <PageHeader
+        eyebrow={`${ROLE_LABELS[user.role] || user.role}${user.hostelBlock ? ` · block ${user.hostelBlock}` : ""}`}
+        title="Profile"
+        subtitle="Manage your account details, password, and review your activity."
+        actions={
+          <button onClick={logout} className="btn-ghost py-2 px-4 text-xs text-rose-300 border-rose-400/25 hover:bg-rose-500/10">
+            Log out
+          </button>
+        }
+      />
 
       {/* Profile info */}
       <div className="card p-6 mb-8 animate-fade-up" style={{ animationDelay: "0.04s" }}>

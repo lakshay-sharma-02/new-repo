@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import api from "../lib/api";
 import { useToast } from "../components/Toast";
+import PageHeader from "../components/PageHeader";
 
 const STATUS_BADGE = {
   success: { cls: "bg-emerald-400/10 border-emerald-400/25 text-emerald-300", icon: "✅" },
@@ -32,7 +33,8 @@ export default function Invoice() {
     fetchInvoice();
   }, [fetchInvoice]);
 
-  const handleDownload = () => {
+  // Light, print-friendly invoice sheet — reused by both the PDF and print actions.
+  const buildInvoiceHtml = () => {
     // Escape every user-controlled value before writing raw HTML.
     const esc = (value) =>
       String(value ?? "").replace(/[&<>"']/g, (ch) =>
@@ -98,15 +100,20 @@ export default function Invoice() {
         </div>
       </body></html>
     `;
-    const printWin = window.open("", "_blank");
-    printWin.document.write(html);
-    printWin.document.close();
-    printWin.focus();
-    printWin.print();
+    return html;
   };
 
-  const handlePrint = () => {
-    window.print();
+  const openPrintableInvoice = () => {
+    const printWin = window.open("", "_blank");
+    if (!printWin) {
+      toast.error("Allow pop-ups to save or print this invoice");
+      return;
+    }
+    printWin.document.write(buildInvoiceHtml());
+    printWin.document.close();
+    printWin.focus();
+    // Let the browser lay the sheet out before opening the print dialog.
+    setTimeout(() => printWin.print(), 300);
   };
 
   if (loading) {
@@ -131,13 +138,16 @@ export default function Invoice() {
         ← Payment history
       </Link>
 
-      <div className="flex items-center justify-between mb-8 animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight text-white">Invoice</h1>
-        <div className="print:hidden flex gap-2">
-          <button onClick={handleDownload} className="btn-ghost py-2 px-4 text-xs">📥 Download PDF</button>
-          <button onClick={handlePrint} className="btn-ghost py-2 px-4 text-xs">🖨 Print</button>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Billing"
+        title="Invoice"
+        actions={
+          <div className="print:hidden flex gap-2">
+            <button onClick={openPrintableInvoice} className="btn-ghost py-2 px-4 text-xs">📄 Save as PDF</button>
+            <button onClick={openPrintableInvoice} className="btn-ghost py-2 px-4 text-xs">🖨 Print</button>
+          </div>
+        }
+      />
 
       <div className="card p-8 animate-fade-up" style={{ animationDelay: "0.04s" }}>
         {/* Header */}

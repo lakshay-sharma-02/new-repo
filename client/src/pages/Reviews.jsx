@@ -2,25 +2,33 @@ import { useState, useEffect, useCallback } from "react";
 import api from "../lib/api";
 import { useToast } from "../components/Toast";
 import { useAuth } from "../context/AuthContext";
+import PageHeader from "../components/PageHeader";
 
 const STARS = [5, 4, 3, 2, 1];
 
-function StarRow({ rating, setRating, interactive = true }) {
+function StarRow({ rating, setRating, interactive = true, className = "" }) {
   return (
-    <div className="flex items-center gap-1">
-      {STARS.map((s) => (
-        <button
-          key={s}
-          type="button"
-          onClick={interactive ? () => setRating(s) : undefined}
-          className={`${interactive ? "cursor-pointer" : "cursor-default"} transition-transform`}
-          style={{ transform: rating >= s ? "scale(1.15)" : "scale(1)" }}
-        >
-          <span className="text-xl" style={{ color: rating >= s ? "#fbbf24" : "#4a5060" }}>
+    <div className={`flex items-center gap-1 ${className}`}>
+      {STARS.map((s) =>
+        interactive ? (
+          <button
+            key={s}
+            type="button"
+            onClick={() => setRating(s)}
+            aria-label={`${s} star${s > 1 ? "s" : ""}`}
+            className="cursor-pointer transition-transform hover:scale-110"
+            style={{ transform: rating >= s ? "scale(1.15)" : "scale(1)" }}
+          >
+            <span className="text-xl" style={{ color: rating >= s ? "#fbbf24" : "#4a5060" }}>
+              ★
+            </span>
+          </button>
+        ) : (
+          <span key={s} aria-hidden="true" className="text-xl leading-none" style={{ color: rating >= s ? "#fbbf24" : "#4a5060" }}>
             ★
           </span>
-        </button>
-      ))}
+        )
+      )}
     </div>
   );
 }
@@ -99,20 +107,21 @@ export default function Reviews() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 animate-fade-up">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">Student reviews</h1>
-          <p className="muted mt-2">What fellow hostellers are saying about the laundry service.</p>
-        </div>
-        {canReview && (
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="btn-primary py-2.5 px-5 text-[13px]"
-          >
-            {showForm ? "✕ Cancel" : "✏️ Write a review"}
-          </button>
-        )}
-      </div>
+      <PageHeader
+        eyebrow="Community"
+        title="Student reviews"
+        subtitle="What fellow hostellers are saying about the laundry service."
+        actions={
+          canReview && (
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="btn-primary py-2.5 px-5 text-[13px]"
+            >
+              {showForm ? "✕ Cancel" : "✏️ Write a review"}
+            </button>
+          )
+        }
+      />
 
       {/* Review form */}
       {showForm && (
@@ -190,7 +199,7 @@ export default function Reviews() {
           {/* Average rating */}
           <div className="card p-7 text-center animate-fade-up" style={{ animationDelay: "0.08s" }}>
             <div className="text-5xl font-bold text-white mb-2">{data.average.toFixed(1)}</div>
-            <StarRow rating={Math.round(data.average)} setRating={() => {}} interactive={false} />
+            <StarRow rating={Math.round(data.average)} setRating={() => {}} interactive={false} className="justify-center" />
             <p className="text-xs text-[#5d6577] mt-3">{data.total} review{data.total !== 1 ? "s" : ""}</p>
           </div>
 

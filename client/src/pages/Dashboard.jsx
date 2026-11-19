@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import api from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import StatusTracker from "../components/StatusTracker";
-
-const ORDER = ["submitted", "received", "washing", "drying", "folding", "ready", "picked_up"];
+import PageHeader from "../components/PageHeader";
 
 const BADGE_STYLE = {
   ready: { bg: "rgba(52,211,153,0.12)", border: "rgba(52,211,153,0.3)", fg: "#6ee7b7", icon: "🎉" },
@@ -68,17 +67,17 @@ export default function Dashboard() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 animate-fade-up">
-        <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            {greeting}{firstName ? `, ${firstName}` : ""} 👋
-          </h1>
-          <p className="muted mt-2">Here's your laundry at a glance</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link to="/submit" className="btn-primary py-2.5 px-5 text-[13px]">+ Submit batch</Link>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Student dashboard"
+        title={`${greeting}${firstName ? `, ${firstName}` : ""} 👋`}
+        subtitle="Here's your laundry at a glance — live status, block schedule, and pickup windows."
+        actions={
+          <>
+            <Link to="/timings" className="btn-ghost py-2.5 px-5 text-[13px]">🗓️ Block schedule</Link>
+            <Link to="/submit" className="btn-primary py-2.5 px-5 text-[13px]">+ Submit batch</Link>
+          </>
+        }
+      />
 
       {/* Block schedule strip (published by the laundry service) */}
       {timings && (
@@ -131,10 +130,13 @@ export default function Dashboard() {
         </div>
 
         {active.length === 0 ? (
-          <div className="card p-14 text-center">
-            <p className="text-5xl mb-4 opacity-80">🧺</p>
+          <div className="card p-12 sm:p-14 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-accent-500/10 border border-accent-400/20 flex items-center justify-center text-3xl mx-auto mb-5">🧺</div>
             <p className="text-lg font-semibold text-white">No active laundry</p>
-            <p className="muted text-sm mt-1 mb-6">Everything's picked up — nice and clean.</p>
+            <p className="muted text-sm mt-1.5 mb-6 max-w-sm mx-auto">
+              Everything's picked up — nice and clean. Drop a bag at your block's collection point
+              and log it here to get a live tracker.
+            </p>
             <Link to="/submit" className="btn-primary inline-flex">Submit your first batch →</Link>
           </div>
         ) : (

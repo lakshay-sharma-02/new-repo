@@ -26,7 +26,10 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 relative">
+      <Link to="/login" className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs font-medium text-[#8b93a7] hover:text-white transition-colors">
+        ← Back to sign in
+      </Link>
       <div className="w-full max-w-md animate-fade-up">
         <div className="text-center mb-9">
           <div className="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-500 to-fuchsia-500 items-center justify-center text-3xl mb-5 shadow-2xl shadow-accent-600/40">

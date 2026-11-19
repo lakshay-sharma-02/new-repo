@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import api from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../components/Toast";
+import PageHeader from "../components/PageHeader";
 
 const ORDER = ["submitted", "received", "washing", "drying", "folding", "ready", "picked_up"];
 const LABELS = {
@@ -113,6 +115,7 @@ export default function StaffConsole() {
     });
     const max = Math.max(1, ...days.map((d) => d.count));
     return days.map((d) => ({
+      key: d.day.toISOString(),
       label: d.day.toLocaleDateString(undefined, { weekday: "narrow" }),
       count: d.count,
       h: Math.round((d.count / max) * 100),
@@ -169,24 +172,16 @@ export default function StaffConsole() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 animate-fade-up">
-        <div>
-          <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">Ops console</h1>
-            <span className="badge bg-accent-500/15 border border-accent-400/30 text-accent-300 py-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-glow mr-1.5 inline-block" />
-              {user?.role === "warden" ? "WARDEN" : "STAFF"} · {user?.hostelBlock}
-            </span>
-          </div>
-          <p className="muted mt-2">The laundry floor, live — drive every batch from drop-off to pickup.</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-[#5d6577] font-medium">{greeting}</span>
-          <span className="hidden sm:inline-flex items-center gap-1.5 badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-300 py-1">
+      <PageHeader
+        eyebrow={`${user?.role === "warden" ? "Warden" : "Staff"} · block ${user?.hostelBlock || "—"}`}
+        title="Ops console"
+        subtitle={`The laundry floor, live — ${greeting}. Drive every batch from drop-off to pickup.`}
+        actions={
+          <span className="inline-flex items-center gap-1.5 badge bg-emerald-400/10 border border-emerald-400/25 text-emerald-300 py-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-glow" /> live · polls every 3s
           </span>
-        </div>
-      </div>
+        }
+      />
 
       {/* Schedule strip */}
       {schedules.length > 0 && (
@@ -200,7 +195,7 @@ export default function StaffConsole() {
               </span>
             </div>
           ))}
-          <a href="/timings" className="btn-ghost py-2.5 px-4 text-xs self-center">Edit schedules →</a>
+          <Link to="/timings" className="btn-ghost py-2.5 px-4 text-xs self-center">Edit schedules →</Link>
         </div>
       )}
 
@@ -227,7 +222,7 @@ export default function StaffConsole() {
         </div>
         <div className="flex items-end gap-3 h-28">
           {bars.map((b) => (
-            <div key={b.label} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+            <div key={b.key} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
               <span className="text-[11px] font-semibold" style={{ color: b.today ? "#a5b4fc" : "#8b93a7" }}>{b.count}</span>
               <div
                 className="w-full rounded-t-lg transition-all duration-500"
@@ -375,14 +370,14 @@ export default function StaffConsole() {
                     {hasOpenIssue && (
                       <div className="w-full sm:w-auto">
                         {isResolving ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 w-full sm:w-auto">
                             <input
                               autoFocus
                               value={resolveText}
                               onChange={(e) => setResolveText(e.target.value)}
                               onKeyDown={(e) => e.key === "Enter" && resolve(b)}
                               placeholder="Response to the student…"
-                              className="field text-xs px-2.5 py-2 w-44"
+                              className="field text-xs px-2.5 py-2 w-full sm:w-44"
                             />
                             <button
                               onClick={() => resolve(b)}

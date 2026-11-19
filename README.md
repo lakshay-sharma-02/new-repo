@@ -59,7 +59,7 @@ A floating **Demo Simulator** widget (visible to student users) auto-advances ba
 - **Axios** — API client with JWT interceptor
 
 ### Backend
-- **Express.js** — REST API with 10 route modules
+- **Express.js** — REST API with 11 route modules
 - **JWT Authentication** — secure token-based auth with role-based middleware
 - **MongoDB / Mongoose** — data models for 8 entities (User, Batch, Timings, Notification, Payment, Coupon, Review, Service)
 - **In-memory Mock Store** — drop-in replacement for Mongoose that runs with `MOCK_MODE=true` (no MongoDB required for demo)
@@ -80,9 +80,8 @@ laundry-roulette/
 │   │   ├── components/  # Navbar, StatusTracker, DemoSimulator, NotificationsBell, Toast
 │   │   ├── context/     # Auth context + provider
 │   │   ├── lib/         # API client (api.js — Axios with JWT interceptor)
-│   │   ├── pages/       # 15 route pages
+│   │   ├── pages/       # 17 route pages
 │   │   ├── App.jsx      # Main app with role-based routing
-│   │   ├── App.css      # Vite defaults (unused)
 │   │   ├── index.css    # Tailwind base + design system
 │   │   └── App.test.jsx # Smoke test
 │   ├── package.json

@@ -16,6 +16,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Python (docs report build scripts)
+__pycache__/
+*.py[cod]
+
 # OS
 .DS_Store
 Thumbs.db

@@ -31,6 +31,9 @@ export default function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative">
+      <Link to="/" className="absolute top-6 left-6 inline-flex items-center gap-1.5 text-xs font-medium text-[#8b93a7] hover:text-white transition-colors">
+        ← Back to home
+      </Link>
       <div className="w-full max-w-md animate-fade-up">
         {/* Logo */}
         <div className="text-center mb-9">

@@ -66,7 +66,13 @@ export default function DemoSimulator() {
               </span>
               <p className="text-sm font-semibold text-white">Live demo</p>
             </div>
-            <button onClick={() => setOpen(false)} className="text-[#5d6577] hover:text-white text-lg leading-none cursor-pointer">×</button>
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Close demo panel"
+              className="text-[#5d6577] hover:text-white text-lg leading-none cursor-pointer"
+            >
+              ×
+            </button>
           </div>
 
           <p className="text-[11px] text-[#8b93a7] mb-3 leading-relaxed">
